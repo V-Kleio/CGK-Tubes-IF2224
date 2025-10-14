@@ -1,0 +1,6 @@
+[package]
+name = "CGK-Tubes-IF2224"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
