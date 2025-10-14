@@ -1,0 +1,27 @@
+
+{
+    "_comment": "Ini representasi DFA di json. Make JSON karena lebih readable menurutku dan lebih gampang di-parse. INI CUMA PLACEHOLDER JADI NANTI GANTI KALO UDAH ADA DESAIN DFA",
+    "start_state": "S0",
+    "final_states": {
+        "S1": "Identifier",
+        "S2": "Number",
+        "S3": "AssignOperator"
+    },
+    "transitions": {
+        "S0": {
+            "a-z": "S1",
+            "0-9": "S2",
+            ":": "S3_pre"
+        },
+        "S1": {
+            "a-z": "S1",
+            "0-9": "S1"
+        },
+        "S2": {
+            "0-9": "S2"
+        },
+        "S3_pre": {
+            "=": "S3"
+        }
+    }
+}
