@@ -1,27 +1,58 @@
-
 {
-    "_comment": "Ini representasi DFA di json. Make JSON karena lebih readable menurutku dan lebih gampang di-parse. INI CUMA PLACEHOLDER JADI NANTI GANTI KALO UDAH ADA DESAIN DFA",
-    "start_state": "S0",
+    "start_state": "S_Start",
+    "trap_state": "S_Error",
+    "keywords": [
+        "program",
+        "var",
+        "begin",
+        "end",
+        "if",
+        "then",
+        "else",
+        "while",
+        "do",
+        "for",
+        "to",
+        "downto",
+        "integer",
+        "real",
+        "boolean",
+        "char",
+        "array",
+        "of",
+        "procedure",
+        "function",
+        "const",
+        "type"
+    ],
+    "word_logical_operators": ["and", "or", "not"],
+    "word_arithmetic_operators": ["div", "mod"],
     "final_states": {
-        "S1": "Identifier",
-        "S2": "Number",
-        "S3": "AssignOperator"
+        "S_Identifier": "IDENTIFIER",
+        "S_Plus": "ARITHMETIC_OPERATOR",
+        "S_Minus": "ARITHMETIC_OPERATOR",
+        "S_Star": "ARITHMETIC_OPERATOR",
+        "S_Slash": "ARITHMETIC_OPERATOR",
+        "S_RelOp_Equal": "RELATIONAL_OPERATOR",
+        "S_RelOp_NotEqual": "RELATIONAL_OPERATOR",
+        "S_RelOp_Less": "RELATIONAL_OPERATOR",
+        "S_RelOp_LessEqual": "RELATIONAL_OPERATOR",
+        "S_RelOp_Greater": "RELATIONAL_OPERATOR",
+        "S_RelOp_GreaterEqual": "RELATIONAL_OPERATOR",
+        "S_AssignOp": "ASSIGN_OPERATOR",
+        "S_Integer": "NUMBER",
+        "S_Real": "NUMBER",
+        "S_StringLiteral": "STRING_LITERAL",
+        "S_Semicolon": "SEMICOLON",
+        "S_Comma": "COMMA",
+        "S_Colon": "COLON",
+        "S_Dot": "DOT",
+        "S_LParen": "LPARENTHESIS",
+        "S_RParen": "RPARENTHESIS",
+        "S_LBracket": "LBRACKET",
+        "S_RBracket": "RBRACKET",
+        "S_Range": "RANGE_OPERATOR"
     },
     "transitions": {
-        "S0": {
-            "a-z": "S1",
-            "0-9": "S2",
-            ":": "S3_pre"
-        },
-        "S1": {
-            "a-z": "S1",
-            "0-9": "S1"
-        },
-        "S2": {
-            "0-9": "S2"
-        },
-        "S3_pre": {
-            "=": "S3"
-        }
     }
 }
