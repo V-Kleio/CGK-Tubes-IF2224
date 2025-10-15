@@ -54,5 +54,79 @@
         "S_Range": "RANGE_OPERATOR"
     },
     "transitions": {
+        "S_Start": {
+            "a-z": "S_Identifier",
+            "A-Z": "S_Identifier",
+            "+": "S_Plus",
+            "-": "S_Minus",
+            "*": "S_Star_Intermediate",
+            "/": "S_Slash",
+            "=": "S_RelOp_Equal",
+            "<": "S_Less_Intermediate",
+            ">": "S_Greater_Intermediate",
+            ":": "S_Colon_Intermediate",
+            "0-9": "S_Integer",
+            "'": "S_StringLiteral_Open",
+            ";": "S_Semicolon",
+            ",": "S_Comma",
+            ".": "S_Dot_Intermediate",
+            "(": "S_LParen_Intermediate",
+            ")": "S_RParen",
+            "[": "S_LBracket",
+            "]": "S_RBracket",
+            "{": "S_InComment_Curly",
+            " \t\n\r": "S_Start"
+        },
+        "S_Identifier": {
+            "a-z": "S_Identifier",
+            "A-Z": "S_Identifier",
+            "0-9": "S_Identifier",
+            "_": "S_Identifier"
+        },
+        "S_Star_Intermediate": {
+            ")": "S_Start"
+        },
+        "S_Less_Intermediate": {
+            "=": "S_RelOp_LessEqual",
+            ">": "S_RelOp_NotEqual"
+        },
+        "S_Greater_Intermediate": {
+        "=": "S_RelOp_GreaterEqual"
+        },
+        "S_Colon_Intermediate": {
+            "=": "S_AssignOp"
+        },
+        "S_Integer": {
+            "0-9": "S_Integer",
+            ".": "S_Real_Intermediate"
+        },
+        "S_Real_Intermediate": {
+            "0-9": "S_Real"
+        },
+        "S_Real": {
+            "0-9": "S_Real"
+        },
+        "S_StringLiteral_Open": {
+            "'": "S_StringLiteral",
+            "any": "S_StringLiteral_Open"
+        },
+        "S_Dot_Intermediate": {
+            ".": "S_Range"
+        },
+        "S_LParen_Intermediate": {
+            "*": "S_InComment_Paren"
+        },
+        "S_InComment_Curly": {
+            "}": "S_Start",
+            "any": "S_InComment_Curly"
+        },
+        "S_InComment_Paren": {
+            "*": "S_Maybe_EndComment_Paren",
+            "any": "S_InComment_Paren"
+        },
+        "S_Maybe_EndComment_Paren": {
+            ")": "S_Start",
+            "any": "S_InComment_Paren"
+        }
     }
 }
