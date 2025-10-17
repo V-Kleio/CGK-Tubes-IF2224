@@ -1,0 +1,131 @@
+{
+    "start_state": "S_Start",
+    "keywords": [
+        "program",
+        "var",
+        "begin",
+        "end",
+        "if",
+        "then",
+        "else",
+        "while",
+        "do",
+        "for",
+        "to",
+        "downto",
+        "integer",
+        "real",
+        "boolean",
+        "char",
+        "array",
+        "of",
+        "procedure",
+        "function",
+        "const",
+        "type"
+    ],
+    "word_logical_operators": ["and", "or", "not"],
+    "word_arithmetic_operators": ["div", "mod"],
+    "final_states": {
+        "S_Identifier": "IDENTIFIER",
+        "S_Plus": "ARITHMETIC_OPERATOR",
+        "S_Minus": "ARITHMETIC_OPERATOR",
+        "S_Star": "ARITHMETIC_OPERATOR",
+        "S_Slash": "ARITHMETIC_OPERATOR",
+        "S_RelOp_Equal": "RELATIONAL_OPERATOR",
+        "S_RelOp_NotEqual": "RELATIONAL_OPERATOR",
+        "S_RelOp_Less": "RELATIONAL_OPERATOR",
+        "S_RelOp_LessEqual": "RELATIONAL_OPERATOR",
+        "S_RelOp_Greater": "RELATIONAL_OPERATOR",
+        "S_RelOp_GreaterEqual": "RELATIONAL_OPERATOR",
+        "S_AssignOp": "ASSIGN_OPERATOR",
+        "S_Integer": "NUMBER",
+        "S_Real": "NUMBER",
+        "S_StringLiteral": "STRING_LITERAL",
+        "S_Semicolon": "SEMICOLON",
+        "S_Comma": "COMMA",
+        "S_Colon": "COLON",
+        "S_Dot": "DOT",
+        "S_LParen": "LPARENTHESIS",
+        "S_RParen": "RPARENTHESIS",
+        "S_LBracket": "LBRACKET",
+        "S_RBracket": "RBRACKET",
+        "S_Range": "RANGE_OPERATOR"
+    },
+    "transitions": {
+        "S_Start": {
+            "a-z": "S_Identifier",
+            "A-Z": "S_Identifier",
+            "+": "S_Plus",
+            "-": "S_Minus",
+            "*": "S_Star_Intermediate",
+            "/": "S_Slash",
+            "=": "S_RelOp_Equal",
+            "<": "S_RelOp_Less",
+            ">": "S_RelOp_Greater",
+            ":": "S_Colon",
+            "0-9": "S_Integer",
+            "'": "S_StringLiteral_Open",
+            ";": "S_Semicolon",
+            ",": "S_Comma",
+            ".": "S_Dot",
+            "(": "S_LParen",
+            ")": "S_RParen",
+            "[": "S_LBracket",
+            "]": "S_RBracket",
+            "{": "S_InComment_Curly",
+            " \t\n\r": "S_Start"
+        },
+        "S_Identifier": {
+            "a-z": "S_Identifier",
+            "A-Z": "S_Identifier",
+            "0-9": "S_Identifier",
+            "_": "S_Identifier"
+        },
+        "S_Star_Intermediate": {
+            ")": "S_Start"
+        },
+        "S_RelOp_Less": {
+            "=": "S_RelOp_LessEqual",
+            ">": "S_RelOp_NotEqual"
+        },
+        "S_RelOp_Greater": {
+        "=": "S_RelOp_GreaterEqual"
+        },
+        "S_Colon": {
+            "=": "S_AssignOp"
+        },
+        "S_Integer": {
+            "0-9": "S_Integer",
+            ".": "S_Real_Intermediate"
+        },
+        "S_Real_Intermediate": {
+            "0-9": "S_Real"
+        },
+        "S_Real": {
+            "0-9": "S_Real"
+        },
+        "S_StringLiteral_Open": {
+            "'": "S_StringLiteral",
+            "any": "S_StringLiteral_Open"
+        },
+        "S_Dot": {
+            ".": "S_Range"
+        },
+        "S_LParen": {
+            "*": "S_InComment_Paren"
+        },
+        "S_InComment_Curly": {
+            "}": "S_Start",
+            "any": "S_InComment_Curly"
+        },
+        "S_InComment_Paren": {
+            "*": "S_Maybe_EndComment_Paren",
+            "any": "S_InComment_Paren"
+        },
+        "S_Maybe_EndComment_Paren": {
+            ")": "S_Start",
+            "any": "S_InComment_Paren"
+        }
+    }
+}
