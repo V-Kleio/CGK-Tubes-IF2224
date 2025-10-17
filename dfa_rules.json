@@ -1,6 +1,5 @@
 {
     "start_state": "S_Start",
-    "trap_state": "S_Error",
     "keywords": [
         "program",
         "var",

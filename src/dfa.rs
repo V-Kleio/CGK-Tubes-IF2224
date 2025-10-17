@@ -4,7 +4,6 @@ use std::collections::HashMap;
 #[derive(Deserialize, Debug)]
 pub struct Dfa {
     pub start_state: String,
-    pub trap_state: String,
     pub keywords: Vec<String>,
     pub word_logical_operators: Vec<String>,
     pub word_arithmetic_operators: Vec<String>,
