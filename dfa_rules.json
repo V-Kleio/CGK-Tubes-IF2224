@@ -62,15 +62,15 @@
             "*": "S_Star_Intermediate",
             "/": "S_Slash",
             "=": "S_RelOp_Equal",
-            "<": "S_Less_Intermediate",
-            ">": "S_Greater_Intermediate",
-            ":": "S_Colon_Intermediate",
+            "<": "S_RelOp_Less",
+            ">": "S_RelOp_Greater",
+            ":": "S_Colon",
             "0-9": "S_Integer",
             "'": "S_StringLiteral_Open",
             ";": "S_Semicolon",
             ",": "S_Comma",
-            ".": "S_Dot_Intermediate",
-            "(": "S_LParen_Intermediate",
+            ".": "S_Dot",
+            "(": "S_LParen",
             ")": "S_RParen",
             "[": "S_LBracket",
             "]": "S_RBracket",
@@ -86,14 +86,14 @@
         "S_Star_Intermediate": {
             ")": "S_Start"
         },
-        "S_Less_Intermediate": {
+        "S_RelOp_Less": {
             "=": "S_RelOp_LessEqual",
             ">": "S_RelOp_NotEqual"
         },
-        "S_Greater_Intermediate": {
+        "S_RelOp_Greater": {
         "=": "S_RelOp_GreaterEqual"
         },
-        "S_Colon_Intermediate": {
+        "S_Colon": {
             "=": "S_AssignOp"
         },
         "S_Integer": {
@@ -110,10 +110,10 @@
             "'": "S_StringLiteral",
             "any": "S_StringLiteral_Open"
         },
-        "S_Dot_Intermediate": {
+        "S_Dot": {
             ".": "S_Range"
         },
-        "S_LParen_Intermediate": {
+        "S_LParen": {
             "*": "S_InComment_Paren"
         },
         "S_InComment_Curly": {

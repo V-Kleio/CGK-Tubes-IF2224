@@ -121,7 +121,7 @@ impl Lexer {
             "RPARENTHESIS" => TokenType::RParenthesis,
             "LBRACKET" => TokenType::LBracket,
             "RBRACKET" => TokenType::RBracket,
-            _ => panic!("Unknown token type in DFA final_states: {}", token_type_str),
+            _ => panic!("Unknown token type: {}", token_type_str),
         };
         Token { token_type, value }
     }
