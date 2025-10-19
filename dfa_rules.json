@@ -58,7 +58,7 @@
             "A-Z": "S_Identifier",
             "+": "S_Plus",
             "-": "S_Minus",
-            "*": "S_Star_Intermediate",
+            "*": "S_Star",
             "/": "S_Slash",
             "=": "S_RelOp_Equal",
             "<": "S_RelOp_Less",
@@ -82,7 +82,7 @@
             "0-9": "S_Identifier",
             "_": "S_Identifier"
         },
-        "S_Star_Intermediate": {
+        "S_Star": {
             ")": "S_Start"
         },
         "S_RelOp_Less": {
