@@ -1,4 +1,6 @@
 use std::env;
+use std::fs::File;
+use std::io::{BufWriter, Write};
 
 use crate::{dfa::Dfa, lexer::Lexer};
 
@@ -6,15 +8,15 @@ mod token;
 mod dfa;
 mod lexer;
 
-
 fn main() {
     let args: Vec<String> = env::args().collect();
-    if args.len() < 2 {
-        eprintln!("Usage: {} <path_to_pascal_file", args[0]);
+    if args.len() < 3 {
+        eprintln!("Usage: {} <path_to_pascal_file> <pathtooutput>", args[0]);
         return;
     }
 
     let filepath = &args[1];
+    let pathtooutput = &args[2];
 
     let dfa = match Dfa::from_file("dfa_rules.json") {
         Ok(d) => d,
@@ -33,10 +35,32 @@ fn main() {
     };
 
     let mut lexer = Lexer::new(source_code, dfa);
+    let mut tokens = Vec::new();
+
+    while let Some(token) = lexer.get_next_token() {
+        tokens.push(token);
+    }
 
     println!("---TOKENS---");
-    while let Some(token) = lexer.get_next_token() {
+    for token in &tokens {
         println!("{}", token);
     }
     println!("------------");
+
+    let file = match File::create(pathtooutput) {
+        Ok(f) => f,
+        Err(e) => {
+            eprintln!("Error output file {}: {}", pathtooutput, e);
+            return;
+        }
+    };
+    let mut writer = BufWriter::new(file);
+
+    writeln!(writer, "---TOKENS---").unwrap();
+    for token in &tokens {
+        writeln!(writer, "{}", token).unwrap();
+    }
+    writeln!(writer, "------------").unwrap();
+
+    writer.flush().unwrap();
 }
