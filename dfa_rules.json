@@ -22,7 +22,9 @@
         "procedure",
         "function",
         "const",
-        "type"
+        "type",
+        "true",
+        "false"
     ],
     "word_logical_operators": ["and", "or", "not"],
     "word_arithmetic_operators": ["div", "mod"],
