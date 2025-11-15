@@ -117,6 +117,10 @@ impl Parser {
         }
     }
 
+    fn previous(&self) -> Token {
+        self.tokens[self.current - 1].clone()
+    }
+
     // Grammar Rule Functions
 
     // <program> -> <program-header> <declaration-part> <compound-statement> DOT
