@@ -4,9 +4,11 @@ use std::io::{BufWriter, Write};
 
 use crate::{dfa::Dfa, lexer::Lexer};
 
-mod token;
 mod dfa;
 mod lexer;
+mod node;
+mod parser;
+mod token;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
