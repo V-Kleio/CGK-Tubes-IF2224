@@ -36,7 +36,6 @@ pub enum NodeType {
     SimpleExpression,
     Term,
     Factor,
-    FunctionCall,
     // Terminal
     Terminal(Token),
 }
@@ -88,7 +87,6 @@ impl fmt::Display for NodeType {
             NodeType::SimpleExpression => write!(f, "<simple-expression>"),
             NodeType::Term => write!(f, "<term>"),
             NodeType::Factor => write!(f, "<factor>"),
-            NodeType::FunctionCall => write!(f, "<function-call>"),
         }
     }
 }
