@@ -327,38 +327,32 @@ impl Parser {
     }
 
     // <additive-operator> -> +, -, atau
-    fn parse_additive_operator(&mut self) -> ParseResult {
-        if self.check(&TokenType::ArithmeticOperator)
-            && (self.peek().value == "+" || self.peek().value == "-")
+    fn match_additive_operator(&mut self) -> Option<Token> {
+        if self.check_value(&TokenType::ArithmeticOperator, "+")
+            || self.check_value(&TokenType::ArithmeticOperator, "-")
         {
-            Ok(ParseNode::new_terminal(self.advance()))
+            Some(self.advance())
         } else if self.check_value(&TokenType::LogicalOperator, "atau") {
-            Ok(ParseNode::new_terminal(self.advance()))
+            Some(self.advance())
         } else {
-            Err(ParseError {
-                message: "Expected an additive operator (+, -, atau).".to_string(),
-                token: self.peek().clone(),
-            })
+            None
         }
     }
 
     // <multiplicative-operator> -> *, /, bagi, mod, dan
-    fn parse_multiplicative_operator(&mut self) -> ParseResult {
-        if self.check(&TokenType::ArithmeticOperator)
-            && (self.peek().value == "*" || self.peek().value == "/")
+    fn match_multiplicative_operator(&mut self) -> Option<Token> {
+        if self.check_value(&TokenType::ArithmeticOperator, "*")
+            || self.check_value(&TokenType::ArithmeticOperator, "/")
         {
-            Ok(ParseNode::new_terminal(self.advance()))
+            Some(self.advance())
         } else if self.check_value(&TokenType::Keyword, "bagi")
             || self.check_value(&TokenType::Keyword, "mod")
         {
-            Ok(ParseNode::new_terminal(self.advance()))
+            Some(self.advance())
         } else if self.check_value(&TokenType::LogicalOperator, "dan") {
-            Ok(ParseNode::new_terminal(self.advance()))
+            Some(self.advance())
         } else {
-            Err(ParseError {
-                message: "Expected a multiplicative operator (*, /, bagi, mod, dan).".to_string(),
-                token: self.peek().clone(),
-            })
+            None
         }
     }
 }
