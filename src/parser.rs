@@ -233,7 +233,15 @@ impl Parser {
     // <compound-statement> -> KEYWORD(mulai) + statement-list + KEYWORD(selesai)
     fn parse_compound_statement(&mut self) -> ParseResult {
         let mut node = ParseNode::new(NodeType::CompoundStatement);
-        // TODO: Implement parsing logic
+
+        node.children
+            .push(self.consume_keyword("mulai", "Expected 'mulai' keyword.")?);
+
+        node.children.push(self.parse_statement_list()?);
+
+        node.children
+            .push(self.consume_keyword("selesai", "Expected 'selesai' keyword.")?);
+
         Ok(node)
     }
 
@@ -281,36 +289,152 @@ impl Parser {
 
     // <parameter-list> -> expression (COMMA + expression)*
     fn parse_parameter_list(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::ParameterList);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::ParameterList);
+
+        node.children.push(self.parse_expression()?);
+
+        while self.match_token(&TokenType::Comma) {
+            node.children.push(ParseNode::new_terminal(self.previous()));
+            node.children.push(self.parse_expression()?);
+        }
+
         Ok(node)
     }
 
     // <expression> -> simple-expression (relational-operator + simple-expression)?
     fn parse_expression(&mut self) -> ParseResult {
-        let mut node = ParseNode::new(NodeType::Expression);
-        // TODO: Implement parsing logic
-        Ok(node)
+        let mut left_node = ParseNode::new(NodeType::SimpleExpression);
+
+        if self.check(&TokenType::RelationalOperator) {
+            let mut new_parent_node = ParseNode::new(NodeType::SimpleExpression);
+
+            new_parent_node.children.push(left_node);
+
+            new_parent_node
+                .children
+                .push(self.parse_relational_operator()?);
+
+            let right_node = self.parse_simple_expression()?;
+            new_parent_node.children.push(right_node);
+
+            Ok(new_parent_node)
+        } else {
+            Ok(left_node)
+        }
     }
 
     // <simple-expression> -> (ARITHMETIC_OPERATOR(+/-))? + term (additive-operator + term)*
     fn parse_simple_expression(&mut self) -> ParseResult {
         let mut node = ParseNode::new(NodeType::SimpleExpression);
-        // TODO: Implement parsing logic
+
+        if self.check_value(&TokenType::ArithmeticOperator, "+")
+            || self.check_value(&TokenType::ArithmeticOperator, "-")
+        {
+            node.children.push(ParseNode::new_terminal(self.advance()));
+        }
+
+        let mut left_node = self.parse_term()?;
+
+        while let Some(operator_token) = self.match_additive_operator() {
+            let mut new_parent_node = ParseNode::new(NodeType::SimpleExpression);
+
+            new_parent_node.children.push(left_node);
+            new_parent_node
+                .children
+                .push(ParseNode::new_terminal(operator_token));
+
+            let right_node = self.parse_term()?;
+            new_parent_node.children.push(right_node);
+
+            left_node = new_parent_node;
+        }
+
+        node.children.push(left_node);
+
         Ok(node)
     }
 
     // <term> -> factor (multiplicative-operator + factor)*
     fn parse_term(&mut self) -> ParseResult {
-        let mut node = ParseNode::new(NodeType::Term);
-        // TODO: Implement parsing logic
-        Ok(node)
+        let mut left_node = self.parse_factor()?;
+
+        while let Some(operator_token) = self.match_multiplicative_operator() {
+            let mut term_node = ParseNode::new(NodeType::Term);
+
+            term_node.children.push(left_node);
+            term_node
+                .children
+                .push(ParseNode::new_terminal(operator_token));
+
+            let right_node = self.parse_factor()?;
+            term_node.children.push(right_node);
+
+            left_node = term_node;
+        }
+
+        Ok(left_node)
     }
 
     // <factor> -> IDENTIFIER | NUMBER | CHAR_LITERAL | STRING_LITERAL | (LPARENTHESIS + expression + RPARENTHESIS) | LOGICAL_OPERATOR(tidak) + factor | function-call
     fn parse_factor(&mut self) -> ParseResult {
         let mut node = ParseNode::new(NodeType::Factor);
-        // TODO: Implement parsing logic
+
+        if self.match_token(&TokenType::Number) {
+            // Case: NUMBER
+            node.children.push(ParseNode::new_terminal(self.previous()));
+        } else if self.match_token(&TokenType::CharLiteral) {
+            // Case: CHAR_LITERAL
+            node.children.push(ParseNode::new_terminal(self.previous()));
+        } else if self.match_token(&TokenType::StringLiteral) {
+            // Case: STRING_LITERAL
+            node.children.push(ParseNode::new_terminal(self.previous()));
+        } else if self.match_token(&TokenType::LParenthesis) {
+            // Case: (LPARENTHESIS + expression + RPARENTHESIS)
+            node.children.push(ParseNode::new_terminal(self.previous()));
+            node.children.push(self.parse_expression()?);
+            node.children
+                .push(self.consume(TokenType::RParenthesis, "Expected ')' after expression.")?);
+        } else if self.check_value(&TokenType::LogicalOperator, "tidak") {
+            // Case: LOGICAL_OPERATOR(tidak) + factor
+            node.children.push(ParseNode::new_terminal(self.advance()));
+            node.children.push(self.parse_factor()?);
+        } else if self.check(&TokenType::Identifier) {
+            // Case: IDENTIFIER or IDENTIFIER(...) / function-call
+            let identifier_token = self.advance();
+
+            if self.check(&TokenType::LParenthesis) {
+                // Case: IDENTIFIER(parameter-list) / function-call
+                let mut func_call_node = ParseNode::new(NodeType::ProcedureOrFunctionCall);
+                func_call_node
+                    .children
+                    .push(ParseNode::new_terminal(identifier_token));
+
+                func_call_node
+                    .children
+                    .push(self.consume(TokenType::LParenthesis, "Expected '('.")?);
+
+                if !self.check(&TokenType::RParenthesis) {
+                    func_call_node.children.push(self.parse_parameter_list()?);
+                }
+
+                func_call_node
+                    .children
+                    .push(self.consume(TokenType::RParenthesis, "Expected ')' after parameters.")?);
+
+                node.children.push(func_call_node);
+            } else {
+                // Case: IDENTIFIER
+                node.children
+                    .push(ParseNode::new_terminal(identifier_token));
+            }
+        } else {
+            return Err(ParseError {
+                message: "Expected a factor (e.g., number, identifier, or '(expression)')."
+                    .to_string(),
+                token: self.peek().clone(),
+            });
+        }
+
         Ok(node)
     }
 
