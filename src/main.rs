@@ -2,11 +2,13 @@ use std::env;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
-use crate::{dfa::Dfa, lexer::Lexer};
+use crate::{dfa::Dfa, lexer::Lexer, parser::Parser};
 
-mod token;
 mod dfa;
 mod lexer;
+mod node;
+mod parser;
+mod token;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -61,6 +63,35 @@ fn main() {
         writeln!(writer, "{}", token).unwrap();
     }
     writeln!(writer, "------------").unwrap();
+
+    println!("\nParsing...");
+
+    let mut parser = Parser::new(tokens);
+
+    let parse_tree_result = parser.parse();
+
+    match parse_tree_result {
+        Ok(node) => {
+            println!("\n---PARSE TREE---");
+            println!("{}", node);
+            println!("--------------");
+
+            writeln!(writer, "\n---PARSE TREE---").unwrap();
+            writeln!(writer, "{}", node).unwrap();
+            writeln!(writer, "--------------").unwrap();
+
+            println!("\nSuccessfully parsed and wrote to {}", pathtooutput);
+        }
+        Err(e) => {
+            eprintln!("\n---PARSER ERROR---");
+            eprintln!("{}", e);
+            eprintln!("------------------");
+
+            writeln!(writer, "\n---PARSER ERROR---").unwrap();
+            writeln!(writer, "{}", e).unwrap();
+            writeln!(writer, "------------------").unwrap();
+        }
+    }
 
     writer.flush().unwrap();
 }
