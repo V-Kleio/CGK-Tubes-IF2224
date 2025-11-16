@@ -3,42 +3,42 @@ program TestAllTokens;
 { This is a block comment
   Good luck UTS. }
 
-var
+variabel
   my_integer, another_var : integer;
   a_real_number         : real;
   is_done               : boolean;
   my_char               : char;
 
-const
+konstanta
   PI = 3.14159;
 
-begin
+(* Range operator for arrays or subranges *)
+{ array declaration is just for tokenizing '..' }
+tipe
+  Numbers = larik[1..10] dari integer;
+
+mulai
   (* Tes assignments and expressions *)
   my_integer := 100;
-  another_var := my_integer + 20 div 5;
+  another_var := my_integer + 20;
   a_real_number := my_integer / 3.0;
 
   (* Tes Relational and logical operators *)
-  if (my_integer > 50) and (another_var <> 104) then
-  begin
+  jika (my_integer > 50) dan (another_var <> 104) maka
+  mulai
     is_done := true;
-  end
-  else
-  begin
+  selesai
+  selain_itu
+  mulai
     is_done := false;
-  end;
+  selesai;
 
   (* Character and String Literals *)
   my_char := 'A';
   writeln('This is a test string literal.');
 
   (* Testing multi-character operators *)
-  if another_var <= 105 then
+  jika another_var <= 105 maka
     writeln('Less than or equal');
 
-  (* Range operator for arrays or subranges *)
-  { array declaration is just for tokenizing '..' }
-  type
-    Numbers = array[1..10] of integer;
-
-end. (* End of the test program. *)
+selesai. (* End of the test program. *)

@@ -1,0 +1,323 @@
+---TOKENS---
+KEYWORD(program)
+IDENTIFIER(TestAllTokens)
+SEMICOLON(;)
+KEYWORD(variabel)
+IDENTIFIER(my_integer)
+COMMA(,)
+IDENTIFIER(another_var)
+COLON(:)
+KEYWORD(integer)
+SEMICOLON(;)
+IDENTIFIER(a_real_number)
+COLON(:)
+KEYWORD(real)
+SEMICOLON(;)
+IDENTIFIER(is_done)
+COLON(:)
+KEYWORD(boolean)
+SEMICOLON(;)
+IDENTIFIER(my_char)
+COLON(:)
+KEYWORD(char)
+SEMICOLON(;)
+KEYWORD(konstanta)
+IDENTIFIER(PI)
+RELATIONAL_OPERATOR(=)
+NUMBER(3.14159)
+SEMICOLON(;)
+KEYWORD(tipe)
+IDENTIFIER(Numbers)
+RELATIONAL_OPERATOR(=)
+KEYWORD(larik)
+LBRACKET([)
+NUMBER(1)
+RANGE_OPERATOR(..)
+NUMBER(10)
+RBRACKET(])
+KEYWORD(dari)
+KEYWORD(integer)
+SEMICOLON(;)
+KEYWORD(mulai)
+IDENTIFIER(my_integer)
+ASSIGN_OPERATOR(:=)
+NUMBER(100)
+SEMICOLON(;)
+IDENTIFIER(another_var)
+ASSIGN_OPERATOR(:=)
+IDENTIFIER(my_integer)
+ARITHMETIC_OPERATOR(+)
+NUMBER(20)
+SEMICOLON(;)
+IDENTIFIER(a_real_number)
+ASSIGN_OPERATOR(:=)
+IDENTIFIER(my_integer)
+ARITHMETIC_OPERATOR(/)
+NUMBER(3.0)
+SEMICOLON(;)
+KEYWORD(jika)
+LPARENTHESIS(()
+IDENTIFIER(my_integer)
+RELATIONAL_OPERATOR(>)
+NUMBER(50)
+RPARENTHESIS())
+LOGICAL_OPERATOR(dan)
+LPARENTHESIS(()
+IDENTIFIER(another_var)
+RELATIONAL_OPERATOR(<>)
+NUMBER(104)
+RPARENTHESIS())
+KEYWORD(maka)
+KEYWORD(mulai)
+IDENTIFIER(is_done)
+ASSIGN_OPERATOR(:=)
+KEYWORD(true)
+SEMICOLON(;)
+KEYWORD(selesai)
+KEYWORD(selain_itu)
+KEYWORD(mulai)
+IDENTIFIER(is_done)
+ASSIGN_OPERATOR(:=)
+KEYWORD(false)
+SEMICOLON(;)
+KEYWORD(selesai)
+SEMICOLON(;)
+IDENTIFIER(my_char)
+ASSIGN_OPERATOR(:=)
+CHAR_LITERAL('A')
+SEMICOLON(;)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+STRING_LITERAL('This is a test string literal.')
+RPARENTHESIS())
+SEMICOLON(;)
+KEYWORD(jika)
+IDENTIFIER(another_var)
+RELATIONAL_OPERATOR(<=)
+NUMBER(105)
+KEYWORD(maka)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+STRING_LITERAL('Less than or equal')
+RPARENTHESIS())
+SEMICOLON(;)
+KEYWORD(selesai)
+DOT(.)
+------------
+
+---PARSE TREE---
+<program>
+  <program-header>
+    KEYWORD(program)
+    IDENTIFIER(TestAllTokens)
+    SEMICOLON(;)
+  <declaration-part>
+    <var-declaration>
+      KEYWORD(variabel)
+      <identifier-list>
+        IDENTIFIER(my_integer)
+        COMMA(,)
+        IDENTIFIER(another_var)
+      COLON(:)
+      <type>
+        KEYWORD(integer)
+      SEMICOLON(;)
+      <identifier-list>
+        IDENTIFIER(a_real_number)
+      COLON(:)
+      <type>
+        KEYWORD(real)
+      SEMICOLON(;)
+      <identifier-list>
+        IDENTIFIER(is_done)
+      COLON(:)
+      <type>
+        KEYWORD(boolean)
+      SEMICOLON(;)
+      <identifier-list>
+        IDENTIFIER(my_char)
+      COLON(:)
+      <type>
+        KEYWORD(char)
+      SEMICOLON(;)
+    <const-declaration>
+      KEYWORD(konstanta)
+      IDENTIFIER(PI)
+      RELATIONAL_OPERATOR(=)
+      <expression>
+        <simple-expression>
+          <term>
+            <factor>
+              NUMBER(3.14159)
+      SEMICOLON(;)
+    <type-declaration>
+      KEYWORD(tipe)
+      IDENTIFIER(Numbers)
+      RELATIONAL_OPERATOR(=)
+      <type>
+        <array-type>
+          KEYWORD(larik)
+          LBRACKET([)
+          <range>
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    NUMBER(1)
+            RANGE_OPERATOR(..)
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    NUMBER(10)
+          RBRACKET(])
+          KEYWORD(dari)
+          <type>
+            KEYWORD(integer)
+      SEMICOLON(;)
+  <compound-statement>
+    KEYWORD(mulai)
+    <statement-list>
+      <assignment-statement>
+        IDENTIFIER(my_integer)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(100)
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(another_var)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                IDENTIFIER(my_integer)
+            ARITHMETIC_OPERATOR(+)
+            <term>
+              <factor>
+                NUMBER(20)
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(a_real_number)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                IDENTIFIER(my_integer)
+              ARITHMETIC_OPERATOR(/)
+              <factor>
+                NUMBER(3.0)
+      SEMICOLON(;)
+      <if-statement>
+        KEYWORD(jika)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                LPARENTHESIS(()
+                <expression>
+                  <simple-expression>
+                    <term>
+                      <factor>
+                        IDENTIFIER(my_integer)
+                  RELATIONAL_OPERATOR(>)
+                  <simple-expression>
+                    <term>
+                      <factor>
+                        NUMBER(50)
+                RPARENTHESIS())
+              LOGICAL_OPERATOR(dan)
+              <factor>
+                LPARENTHESIS(()
+                <expression>
+                  <simple-expression>
+                    <term>
+                      <factor>
+                        IDENTIFIER(another_var)
+                  RELATIONAL_OPERATOR(<>)
+                  <simple-expression>
+                    <term>
+                      <factor>
+                        NUMBER(104)
+                RPARENTHESIS())
+        KEYWORD(maka)
+        <compound-statement>
+          KEYWORD(mulai)
+          <statement-list>
+            <assignment-statement>
+              IDENTIFIER(is_done)
+              ASSIGN_OPERATOR(:=)
+              <expression>
+                <simple-expression>
+                  <term>
+                    <factor>
+                      KEYWORD(true)
+            SEMICOLON(;)
+          KEYWORD(selesai)
+        KEYWORD(selain_itu)
+        <compound-statement>
+          KEYWORD(mulai)
+          <statement-list>
+            <assignment-statement>
+              IDENTIFIER(is_done)
+              ASSIGN_OPERATOR(:=)
+              <expression>
+                <simple-expression>
+                  <term>
+                    <factor>
+                      KEYWORD(false)
+            SEMICOLON(;)
+          KEYWORD(selesai)
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(my_char)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                CHAR_LITERAL('A')
+      SEMICOLON(;)
+      <procedure/function-call>
+        IDENTIFIER(writeln)
+        LPARENTHESIS(()
+        <parameter-list>
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  STRING_LITERAL('This is a test string literal.')
+        RPARENTHESIS())
+      SEMICOLON(;)
+      <if-statement>
+        KEYWORD(jika)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                IDENTIFIER(another_var)
+          RELATIONAL_OPERATOR(<=)
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(105)
+        KEYWORD(maka)
+        <procedure/function-call>
+          IDENTIFIER(writeln)
+          LPARENTHESIS(()
+          <parameter-list>
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    STRING_LITERAL('Less than or equal')
+          RPARENTHESIS())
+      SEMICOLON(;)
+    KEYWORD(selesai)
+  DOT(.)
+
+--------------
