@@ -150,22 +150,20 @@ impl Parser {
     fn parse_declaration_part(&mut self) -> ParseResult {
         let mut node = ParseNode::new(NodeType::DeclarationPart);
 
-        while self.check_value(&TokenType::Keyword, "konstanta") {
-            node.children.push(self.parse_const_declaration()?);
-        }
-
-        while self.check_value(&TokenType::Keyword, "tipe") {
-            node.children.push(self.parse_type_declaration()?);
-        }
-
-        while self.check_value(&TokenType::Keyword, "variabel") {
-            node.children.push(self.parse_var_declaration()?);
-        }
-
-        while self.check_value(&TokenType::Keyword, "prosedur")
-            || self.check_value(&TokenType::Keyword, "fungsi")
-        {
-            node.children.push(self.parse_subprogram_declaration()?);
+        loop {
+            if self.check_value(&TokenType::Keyword, "konstanta") {
+                node.children.push(self.parse_const_declaration()?);
+            } else if self.check_value(&TokenType::Keyword, "tipe") {
+                node.children.push(self.parse_type_declaration()?);
+            } else if self.check_value(&TokenType::Keyword, "variabel") {
+                node.children.push(self.parse_var_declaration()?);
+            } else if self.check_value(&TokenType::Keyword, "prosedur")
+                || self.check_value(&TokenType::Keyword, "fungsi")
+            {
+                node.children.push(self.parse_subprogram_declaration()?);
+            } else {
+                break;
+            }
         }
 
         Ok(node)
@@ -650,6 +648,8 @@ impl Parser {
             node.children.push(self.parse_expression()?);
             node.children
                 .push(self.consume(TokenType::RParenthesis, "Expected ')' after expression.")?);
+        } else if self.check_value(&TokenType::Keyword, "true") || self.check_value(&TokenType::Keyword, "false") {
+            node.children.push(ParseNode::new_terminal(self.advance()));
         } else if self.check_value(&TokenType::LogicalOperator, "tidak") {
             // Case: LOGICAL_OPERATOR(tidak) + factor
             node.children.push(ParseNode::new_terminal(self.advance()));
