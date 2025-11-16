@@ -148,85 +148,260 @@ impl Parser {
 
     // <declaration-part> -> (const-declaration)* (type-declaration)* (var-declaration)* (subprogram-declaration)*
     fn parse_declaration_part(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::DeclarationPart);
-        // TODO: Implement loops
+        let mut node = ParseNode::new(NodeType::DeclarationPart);
+
+        while self.check_value(&TokenType::Keyword, "konstanta") {
+            node.children.push(self.parse_const_declaration()?);
+        }
+
+        while self.check_value(&TokenType::Keyword, "tipe") {
+            node.children.push(self.parse_type_declaration()?);
+        }
+
+        while self.check_value(&TokenType::Keyword, "variabel") {
+            node.children.push(self.parse_var_declaration()?);
+        }
+
+        while self.check_value(&TokenType::Keyword, "prosedur")
+            || self.check_value(&TokenType::Keyword, "fungsi")
+        {
+            node.children.push(self.parse_subprogram_declaration()?);
+        }
+
         Ok(node)
     }
 
     // <const-declaration> -> KEYWORD(konstanta) + (IDENTIFIER = value + SEMICOLON)+
     fn parse_const_declaration(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::ConstDeclaration);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::ConstDeclaration);
+
+        node.children
+            .push(self.consume_keyword("konstanta", "Expected 'konstanta' keyword.")?);
+
+        loop {
+            node.children
+                .push(self.consume(TokenType::Identifier, "Expected constant identifier.")?);
+            node.children
+                .push(self.consume(TokenType::RelationalOperator, "Expected '=' in constant declaration.")?);
+            node.children.push(self.parse_expression()?);
+            node.children
+                .push(self.consume(TokenType::Semicolon, "Expected ';' after constant declaration.")?);
+
+            if !self.check(&TokenType::Identifier) {
+                break;
+            }
+        }
+
         Ok(node)
     }
 
     // <type-declaration> -> KEYWORD(tipe) + (IDENTIFIER = type-definition + SEMICOLON)+
     fn parse_type_declaration(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::TypeDeclaration);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::TypeDeclaration);
+
+        node.children
+            .push(self.consume_keyword("tipe", "Expected 'tipe' keyword.")?);
+
+        loop {
+            node.children
+                .push(self.consume(TokenType::Identifier, "Expected type identifier.")?);
+            node.children
+                .push(self.consume(TokenType::RelationalOperator, "Expected '=' in type declaration.")?);
+            node.children.push(self.parse_type()?);
+            node.children
+                .push(self.consume(TokenType::Semicolon, "Expected ';' after type declaration.")?);
+
+            if !self.check(&TokenType::Identifier) {
+                break;
+            }
+        }
+
         Ok(node)
     }
 
     // <var-declaration> -> KEYWORD(variabel) + (identifier-list + COLON + type + SEMICOLON)+
     fn parse_var_declaration(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::VarDeclaration);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::VarDeclaration);
+
+        node.children
+            .push(self.consume_keyword("variabel", "Expected 'variabel' keyword.")?);
+
+        loop {
+            node.children.push(self.parse_identifier_list()?);
+            node.children
+                .push(self.consume(TokenType::Colon, "Expected ':' after identifier list.")?);
+            node.children.push(self.parse_type()?);
+            node.children
+                .push(self.consume(TokenType::Semicolon, "Expected ';' after variable declaration.")?);
+
+            if !self.check(&TokenType::Identifier) {
+                break;
+            }
+        }
+
         Ok(node)
     }
 
     // <identifier-list> -> IDENTIFIER (COMMA + IDENTIFIER)*
     fn parse_identifier_list(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::IdentifierList);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::IdentifierList);
+
+        node.children
+            .push(self.consume(TokenType::Identifier, "Expected identifier.")?);
+
+        while self.match_token(&TokenType::Comma) {
+            node.children.push(ParseNode::new_terminal(self.previous()));
+            node.children
+                .push(self.consume(TokenType::Identifier, "Expected identifier after ','.")?);
+        }
+
         Ok(node)
     }
 
     // <type> -> KEYWORD(integer/real/boolean/char) | array-type
     fn parse_type(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::Type);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::Type);
+
+        if self.check_value(&TokenType::Keyword, "larik") {
+            node.children.push(self.parse_array_type()?);
+        } else if self.check_value(&TokenType::Keyword, "integer")
+            || self.check_value(&TokenType::Keyword, "real")
+            || self.check_value(&TokenType::Keyword, "boolean")
+            || self.check_value(&TokenType::Keyword, "char")
+        {
+            node.children.push(ParseNode::new_terminal(self.advance()));
+        } else if self.check(&TokenType::Identifier) {
+            node.children.push(ParseNode::new_terminal(self.advance()));
+        } else {
+            return Err(ParseError {
+                message: "Expected type name.".to_string(),
+                token: self.peek().clone(),
+            });
+        }
+
         Ok(node)
     }
 
     // <array-type> -> KEYWORD(larik) + LBRACKET + range + RBRACKET + KEYWORD(dari) + type
     fn parse_array_type(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::ArrayType);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::ArrayType);
+
+        node.children
+            .push(self.consume_keyword("larik", "Expected 'larik' keyword.")?);
+        node.children
+            .push(self.consume(TokenType::LBracket, "Expected '[' after 'larik'.")?);
+        node.children.push(self.parse_range()?);
+        node.children
+            .push(self.consume(TokenType::RBracket, "Expected ']' after range.")?);
+        node.children
+            .push(self.consume_keyword("dari", "Expected 'dari' keyword.")?);
+        node.children.push(self.parse_type()?);
+
         Ok(node)
     }
 
     // <range> -> expression + RANGE_OPERATOR(..) + expression
     fn parse_range(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::Range);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::Range);
+
+        node.children.push(self.parse_expression()?);
+        node.children
+            .push(self.consume(TokenType::RangeOperator, "Expected '..' in range.")?);
+        node.children.push(self.parse_expression()?);
+
         Ok(node)
     }
 
     // <subprogram-declaration> -> procedure-declaration | function-declaration
     fn parse_subprogram_declaration(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::SubprogramDeclaration);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::SubprogramDeclaration);
+
+        if self.check_value(&TokenType::Keyword, "prosedur") {
+            node.children.push(self.parse_procedure_declaration()?);
+        } else if self.check_value(&TokenType::Keyword, "fungsi") {
+            node.children.push(self.parse_function_declaration()?);
+        } else {
+            return Err(ParseError {
+                message: "Expected 'prosedur' or 'fungsi' keyword.".to_string(),
+                token: self.peek().clone(),
+            });
+        }
+
         Ok(node)
     }
 
     // <procedure-declaration> -> KEYWORD(prosedur) + IDENTIFIER + (formal-parameter-list)? + SEMICOLON + block + SEMICOLON
     fn parse_procedure_declaration(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::ProcedureDeclaration);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::ProcedureDeclaration);
+
+        node.children
+            .push(self.consume_keyword("prosedur", "Expected 'prosedur' keyword.")?);
+        node.children
+            .push(self.consume(TokenType::Identifier, "Expected procedure name.")?);
+
+        if self.check(&TokenType::LParenthesis) {
+            node.children.push(self.parse_formal_parameter_list()?);
+        }
+
+        node.children
+            .push(self.consume(TokenType::Semicolon, "Expected ';' after procedure header.")?);
+        node.children.push(self.parse_declaration_part()?);
+        node.children.push(self.parse_compound_statement()?);
+        node.children
+            .push(self.consume(TokenType::Semicolon, "Expected ';' after procedure body.")?);
+
         Ok(node)
     }
 
     // <function-declaration> -> KEYWORD(fungsi) + IDENTIFIER + (formal-parameter-list)? + COLON + type + SEMICOLON + block + SEMICOLON
     fn parse_function_declaration(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::FunctionDeclaration);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::FunctionDeclaration);
+
+        node.children
+            .push(self.consume_keyword("fungsi", "Expected 'fungsi' keyword.")?);
+        node.children
+            .push(self.consume(TokenType::Identifier, "Expected function name.")?);
+
+        if self.check(&TokenType::LParenthesis) {
+            node.children.push(self.parse_formal_parameter_list()?);
+        }
+
+        node.children
+            .push(self.consume(TokenType::Colon, "Expected ':' after function parameters.")?);
+        node.children.push(self.parse_type()?);
+        node.children
+            .push(self.consume(TokenType::Semicolon, "Expected ';' after function header.")?);
+        node.children.push(self.parse_declaration_part()?);
+        node.children.push(self.parse_compound_statement()?);
+        node.children
+            .push(self.consume(TokenType::Semicolon, "Expected ';' after function body.")?);
+
         Ok(node)
     }
 
     // <formal-parameter-list> -> LPARENTHESIS + parameter-group (SEMICOLON + parameter-group)* + RPARENTHESIS
     fn parse_formal_parameter_list(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::FormalParameterList);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::FormalParameterList);
+
+        node.children
+            .push(self.consume(TokenType::LParenthesis, "Expected '(' to start parameter list.")?);
+
+        node.children.push(self.parse_identifier_list()?);
+        node.children
+            .push(self.consume(TokenType::Colon, "Expected ':' after parameter identifiers.")?);
+        node.children.push(self.parse_type()?);
+
+        while self.match_token(&TokenType::Semicolon) {
+            node.children.push(ParseNode::new_terminal(self.previous()));
+            node.children.push(self.parse_identifier_list()?);
+            node.children
+                .push(self.consume(TokenType::Colon, "Expected ':' after parameter identifiers.")?);
+            node.children.push(self.parse_type()?);
+        }
+
+        node.children
+            .push(self.consume(TokenType::RParenthesis, "Expected ')' to end parameter list.")?);
+
         Ok(node)
     }
 
@@ -247,43 +422,148 @@ impl Parser {
 
     // <statement-list> -> statement (SEMICOLON + statement)*
     fn parse_statement_list(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::StatementList);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::StatementList);
+
+        if !self.check_value(&TokenType::Keyword, "selesai") {
+            node.children.push(self.parse_statement()?);
+
+            while self.match_token(&TokenType::Semicolon) {
+                node.children.push(ParseNode::new_terminal(self.previous()));
+                
+                if self.check_value(&TokenType::Keyword, "selesai") {
+                    break;
+                }
+                
+                node.children.push(self.parse_statement()?);
+            }
+        }
+
         Ok(node)
+    }
+
+    fn parse_statement(&mut self) -> ParseResult {
+        if self.check_value(&TokenType::Keyword, "jika") {
+            self.parse_if_statement()
+        } else if self.check_value(&TokenType::Keyword, "selama") {
+            self.parse_while_statement()
+        } else if self.check_value(&TokenType::Keyword, "untuk") {
+            self.parse_for_statement()
+        } else if self.check_value(&TokenType::Keyword, "mulai") {
+            self.parse_compound_statement()
+        } else if self.check(&TokenType::Identifier) {
+            let saved_pos = self.current;
+            self.advance();
+            
+            if self.check(&TokenType::AssignOperator) {
+                self.current = saved_pos;
+                self.parse_assignment_statement()
+            } else if self.check(&TokenType::LParenthesis) {
+                self.current = saved_pos;
+                self.parse_procedure_or_function_call()
+            } else {
+                self.current = saved_pos;
+                self.parse_procedure_or_function_call()
+            }
+        } else {
+            Ok(ParseNode::new(NodeType::StatementList))
+        }
     }
 
     // <assignment-statement> -> IDENTIFIER + ASSIGN_OPERATOR(:=) + expression
     fn parse_assignment_statement(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::AssignmentStatement);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::AssignmentStatement);
+
+        node.children
+            .push(self.consume(TokenType::Identifier, "Expected identifier.")?);
+        node.children
+            .push(self.consume(TokenType::AssignOperator, "Expected ':=' operator.")?);
+        node.children.push(self.parse_expression()?);
+
         Ok(node)
     }
 
-    // <if-statement> -> KEYWORD(jika) + expression + KEYWORD(maka) + statement + (KEYWORD(selain-itu) + statement)?
+    // <if-statement> -> KEYWORD(jika) + expression + KEYWORD(maka) + statement + (KEYWORD(selain_itu) + statement)?
     fn parse_if_statement(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::IfStatement);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::IfStatement);
+
+        node.children
+            .push(self.consume_keyword("jika", "Expected 'jika' keyword.")?);
+        node.children.push(self.parse_expression()?);
+        node.children
+            .push(self.consume_keyword("maka", "Expected 'maka' keyword.")?);
+        node.children.push(self.parse_statement()?);
+
+        if self.match_keyword("selain_itu") {
+            node.children.push(ParseNode::new_terminal(self.previous()));
+            node.children.push(self.parse_statement()?);
+        }
+
         Ok(node)
     }
 
     // <while-statement> -> KEYWORD(selama) + expression + KEYWORD(lakukan) + statement
     fn parse_while_statement(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::WhileStatement);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::WhileStatement);
+
+        node.children
+            .push(self.consume_keyword("selama", "Expected 'selama' keyword.")?);
+        node.children.push(self.parse_expression()?);
+        node.children
+            .push(self.consume_keyword("lakukan", "Expected 'lakukan' keyword.")?);
+        node.children.push(self.parse_statement()?);
+
         Ok(node)
     }
 
-    // <for-statement> -> KEYWORD(untuk) + IDENTIFIER + ASSIGN_OPERATOR + expression + (KEYWORD(ke)/KEYWORD(turun-ke)) + expression + KEYWORD(lakukan) + statement
+    // <for-statement> -> KEYWORD(untuk) + IDENTIFIER + ASSIGN_OPERATOR + expression + (KEYWORD(ke)/KEYWORD(turun_ke)) + expression + KEYWORD(lakukan) + statement
     fn parse_for_statement(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::ForStatement);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::ForStatement);
+
+        node.children
+            .push(self.consume_keyword("untuk", "Expected 'untuk' keyword.")?);
+        node.children
+            .push(self.consume(TokenType::Identifier, "Expected loop variable.")?);
+        node.children
+            .push(self.consume(TokenType::AssignOperator, "Expected ':=' operator.")?);
+        node.children.push(self.parse_expression()?);
+
+        if self.match_keyword("ke") {
+            node.children.push(ParseNode::new_terminal(self.previous()));
+        } else if self.match_keyword("turun_ke") {
+            node.children.push(ParseNode::new_terminal(self.previous()));
+        } else {
+            return Err(ParseError {
+                message: "Expected 'ke' or 'turun_ke' keyword.".to_string(),
+                token: self.peek().clone(),
+            });
+        }
+
+        node.children.push(self.parse_expression()?);
+        node.children
+            .push(self.consume_keyword("lakukan", "Expected 'lakukan' keyword.")?);
+        node.children.push(self.parse_statement()?);
+
         Ok(node)
     }
 
     // <procedure/function-call> -> IDENTIFIER + (LPARENTHESIS + parameter-list + RPARENTHESIS)?
     fn parse_procedure_or_function_call(&mut self) -> ParseResult {
-        let node = ParseNode::new(NodeType::ProcedureOrFunctionCall);
-        // TODO: Implement parsing logic
+        let mut node = ParseNode::new(NodeType::ProcedureOrFunctionCall);
+
+        node.children
+            .push(self.consume(TokenType::Identifier, "Expected procedure or function name.")?);
+
+        if self.match_token(&TokenType::LParenthesis) {
+            node.children.push(ParseNode::new_terminal(self.previous()));
+            
+            if !self.check(&TokenType::RParenthesis) {
+                node.children.push(self.parse_parameter_list()?);
+            }
+            
+            node.children
+                .push(self.consume(TokenType::RParenthesis, "Expected ')' after parameter list.")?);
+        }
+
         Ok(node)
     }
 
@@ -303,24 +583,18 @@ impl Parser {
 
     // <expression> -> simple-expression (relational-operator + simple-expression)?
     fn parse_expression(&mut self) -> ParseResult {
-        let mut left_node = ParseNode::new(NodeType::SimpleExpression);
+        let mut node = ParseNode::new(NodeType::Expression);
+        
+        let left_node = self.parse_simple_expression()?;
 
         if self.check(&TokenType::RelationalOperator) {
-            let mut new_parent_node = ParseNode::new(NodeType::SimpleExpression);
-
-            new_parent_node.children.push(left_node);
-
-            new_parent_node
-                .children
-                .push(self.parse_relational_operator()?);
-
-            let right_node = self.parse_simple_expression()?;
-            new_parent_node.children.push(right_node);
-
-            Ok(new_parent_node)
+            node.children.push(left_node);
+            node.children.push(self.parse_relational_operator()?);
+            node.children.push(self.parse_simple_expression()?);
         } else {
-            Ok(left_node)
+            node.children.push(left_node);
         }
+        Ok(node)
     }
 
     // <simple-expression> -> (ARITHMETIC_OPERATOR(+/-))? + term (additive-operator + term)*
@@ -333,46 +607,28 @@ impl Parser {
             node.children.push(ParseNode::new_terminal(self.advance()));
         }
 
-        let mut left_node = self.parse_term()?;
+        node.children.push(self.parse_term()?);
 
         while let Some(operator_token) = self.match_additive_operator() {
-            let mut new_parent_node = ParseNode::new(NodeType::SimpleExpression);
-
-            new_parent_node.children.push(left_node);
-            new_parent_node
-                .children
-                .push(ParseNode::new_terminal(operator_token));
-
-            let right_node = self.parse_term()?;
-            new_parent_node.children.push(right_node);
-
-            left_node = new_parent_node;
+            node.children.push(ParseNode::new_terminal(operator_token));
+            node.children.push(self.parse_term()?);
         }
-
-        node.children.push(left_node);
 
         Ok(node)
     }
 
     // <term> -> factor (multiplicative-operator + factor)*
     fn parse_term(&mut self) -> ParseResult {
-        let mut left_node = self.parse_factor()?;
+        let mut node = ParseNode::new(NodeType::Term);
+
+        node.children.push(self.parse_factor()?);
 
         while let Some(operator_token) = self.match_multiplicative_operator() {
-            let mut term_node = ParseNode::new(NodeType::Term);
-
-            term_node.children.push(left_node);
-            term_node
-                .children
-                .push(ParseNode::new_terminal(operator_token));
-
-            let right_node = self.parse_factor()?;
-            term_node.children.push(right_node);
-
-            left_node = term_node;
+            node.children.push(ParseNode::new_terminal(operator_token));
+            node.children.push(self.parse_factor()?);
         }
 
-        Ok(left_node)
+        Ok(node)
     }
 
     // <factor> -> IDENTIFIER | NUMBER | CHAR_LITERAL | STRING_LITERAL | (LPARENTHESIS + expression + RPARENTHESIS) | LOGICAL_OPERATOR(tidak) + factor | function-call

@@ -1,0 +1,156 @@
+---TOKENS---
+KEYWORD(program)
+IDENTIFIER(CobaChar)
+SEMICOLON(;)
+KEYWORD(variabel)
+IDENTIFIER(a)
+COMMA(,)
+IDENTIFIER(b)
+COMMA(,)
+IDENTIFIER(c)
+COMMA(,)
+IDENTIFIER(d)
+COLON(:)
+KEYWORD(char)
+SEMICOLON(;)
+KEYWORD(mulai)
+IDENTIFIER(a)
+ASSIGN_OPERATOR(:=)
+CHAR_LITERAL('a')
+SEMICOLON(;)
+IDENTIFIER(b)
+ASSIGN_OPERATOR(:=)
+CHAR_LITERAL('b')
+SEMICOLON(;)
+IDENTIFIER(c)
+ASSIGN_OPERATOR(:=)
+CHAR_LITERAL('c')
+SEMICOLON(;)
+IDENTIFIER(d)
+ASSIGN_OPERATOR(:=)
+CHAR_LITERAL('d')
+SEMICOLON(;)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+IDENTIFIER(a)
+COMMA(,)
+IDENTIFIER(b)
+COMMA(,)
+IDENTIFIER(a)
+COMMA(,)
+IDENTIFIER(c)
+COMMA(,)
+IDENTIFIER(a)
+COMMA(,)
+IDENTIFIER(d)
+RPARENTHESIS())
+SEMICOLON(;)
+KEYWORD(selesai)
+DOT(.)
+------------
+
+---PARSE TREE---
+<program>
+  <program-header>
+    KEYWORD(program)
+    IDENTIFIER(CobaChar)
+    SEMICOLON(;)
+  <declaration-part>
+    <var-declaration>
+      KEYWORD(variabel)
+      <identifier-list>
+        IDENTIFIER(a)
+        COMMA(,)
+        IDENTIFIER(b)
+        COMMA(,)
+        IDENTIFIER(c)
+        COMMA(,)
+        IDENTIFIER(d)
+      COLON(:)
+      <type>
+        KEYWORD(char)
+      SEMICOLON(;)
+  <compound-statement>
+    KEYWORD(mulai)
+    <statement-list>
+      <assignment-statement>
+        IDENTIFIER(a)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                CHAR_LITERAL('a')
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(b)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                CHAR_LITERAL('b')
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(c)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                CHAR_LITERAL('c')
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(d)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                CHAR_LITERAL('d')
+      SEMICOLON(;)
+      <procedure/function-call>
+        IDENTIFIER(writeln)
+        LPARENTHESIS(()
+        <parameter-list>
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  IDENTIFIER(a)
+          COMMA(,)
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  IDENTIFIER(b)
+          COMMA(,)
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  IDENTIFIER(a)
+          COMMA(,)
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  IDENTIFIER(c)
+          COMMA(,)
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  IDENTIFIER(a)
+          COMMA(,)
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  IDENTIFIER(d)
+        RPARENTHESIS())
+      SEMICOLON(;)
+    KEYWORD(selesai)
+  DOT(.)
+
+--------------

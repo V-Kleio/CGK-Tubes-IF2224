@@ -1,0 +1,39 @@
+---TOKENS---
+KEYWORD(program)
+IDENTIFIER(HelloWorld)
+SEMICOLON(;)
+KEYWORD(mulai)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+STRING_LITERAL('Hello World!')
+RPARENTHESIS())
+SEMICOLON(;)
+KEYWORD(selesai)
+DOT(.)
+------------
+
+---PARSE TREE---
+<program>
+  <program-header>
+    KEYWORD(program)
+    IDENTIFIER(HelloWorld)
+    SEMICOLON(;)
+  <declaration-part>
+  <compound-statement>
+    KEYWORD(mulai)
+    <statement-list>
+      <procedure/function-call>
+        IDENTIFIER(writeln)
+        LPARENTHESIS(()
+        <parameter-list>
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  STRING_LITERAL('Hello World!')
+        RPARENTHESIS())
+      SEMICOLON(;)
+    KEYWORD(selesai)
+  DOT(.)
+
+--------------
