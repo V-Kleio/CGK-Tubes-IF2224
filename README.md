@@ -49,7 +49,7 @@ Contoh penggunaan:
 cargo run test/milestone-1/input-1.pas test/milestone-1/output-1.txt
 ```
 
-### Pembagian Tugas
+### Pembagian Tugas M1
 
 | NIM      | TUGAS                                             |
 | -------- | ------------------------------------------------- |
@@ -57,3 +57,12 @@ cargo run test/milestone-1/input-1.pas test/milestone-1/output-1.txt
 | 13523145 | Diagram, main, dfa_rules, input & output, Laporan |
 | 13523146 | dfa_rules, dfa, lexer, token, main, Laporan       |
 | 13523152 | Diagram, Laporan                                  |
+
+### Pembagian Tugas M2
+
+| NIM      | TUGAS                                             |
+| -------- | ------------------------------------------------- |
+| 13523128 | Parser dan laporan                                |
+| 13523145 | Parser, test, dan laporan                         |
+| 13523146 | Laporan                                           |
+| 13523152 | Parser, test, dan laporan                         |
