@@ -1,0 +1,113 @@
+---TOKENS---
+KEYWORD(program)
+IDENTIFIER(JumlahAja)
+SEMICOLON(;)
+KEYWORD(variabel)
+IDENTIFIER(a)
+COMMA(,)
+IDENTIFIER(b)
+COMMA(,)
+IDENTIFIER(hasil)
+COLON(:)
+KEYWORD(integer)
+SEMICOLON(;)
+KEYWORD(mulai)
+IDENTIFIER(a)
+ASSIGN_OPERATOR(:=)
+NUMBER(58)
+SEMICOLON(;)
+IDENTIFIER(b)
+ASSIGN_OPERATOR(:=)
+NUMBER(9)
+SEMICOLON(;)
+IDENTIFIER(hasil)
+ASSIGN_OPERATOR(:=)
+IDENTIFIER(a)
+ARITHMETIC_OPERATOR(+)
+IDENTIFIER(b)
+SEMICOLON(;)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+STRING_LITERAL('hasil penjumlahan tersebut adalah ')
+COMMA(,)
+IDENTIFIER(hasil)
+RPARENTHESIS())
+SEMICOLON(;)
+KEYWORD(selesai)
+DOT(.)
+------------
+
+---PARSE TREE---
+<program>
+  <program-header>
+    KEYWORD(program)
+    IDENTIFIER(JumlahAja)
+    SEMICOLON(;)
+  <declaration-part>
+    <var-declaration>
+      KEYWORD(variabel)
+      <identifier-list>
+        IDENTIFIER(a)
+        COMMA(,)
+        IDENTIFIER(b)
+        COMMA(,)
+        IDENTIFIER(hasil)
+      COLON(:)
+      <type>
+        KEYWORD(integer)
+      SEMICOLON(;)
+  <compound-statement>
+    KEYWORD(mulai)
+    <statement-list>
+      <assignment-statement>
+        IDENTIFIER(a)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(58)
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(b)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(9)
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(hasil)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                IDENTIFIER(a)
+            ARITHMETIC_OPERATOR(+)
+            <term>
+              <factor>
+                IDENTIFIER(b)
+      SEMICOLON(;)
+      <procedure/function-call>
+        IDENTIFIER(writeln)
+        LPARENTHESIS(()
+        <parameter-list>
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  STRING_LITERAL('hasil penjumlahan tersebut adalah ')
+          COMMA(,)
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  IDENTIFIER(hasil)
+        RPARENTHESIS())
+      SEMICOLON(;)
+    KEYWORD(selesai)
+  DOT(.)
+
+--------------

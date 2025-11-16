@@ -1,0 +1,99 @@
+---TOKENS---
+KEYWORD(program)
+IDENTIFIER(UTS)
+SEMICOLON(;)
+KEYWORD(variabel)
+IDENTIFIER(pekan)
+COLON(:)
+KEYWORD(integer)
+SEMICOLON(;)
+KEYWORD(mulai)
+IDENTIFIER(pekan)
+ASSIGN_OPERATOR(:=)
+NUMBER(8)
+SEMICOLON(;)
+KEYWORD(jika)
+IDENTIFIER(pekan)
+RELATIONAL_OPERATOR(=)
+NUMBER(8)
+KEYWORD(maka)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+STRING_LITERAL('Semangat UTS')
+RPARENTHESIS())
+KEYWORD(selain_itu)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+STRING_LITERAL('Nugas moal?')
+RPARENTHESIS())
+SEMICOLON(;)
+KEYWORD(selesai)
+DOT(.)
+------------
+
+---PARSE TREE---
+<program>
+  <program-header>
+    KEYWORD(program)
+    IDENTIFIER(UTS)
+    SEMICOLON(;)
+  <declaration-part>
+    <var-declaration>
+      KEYWORD(variabel)
+      <identifier-list>
+        IDENTIFIER(pekan)
+      COLON(:)
+      <type>
+        KEYWORD(integer)
+      SEMICOLON(;)
+  <compound-statement>
+    KEYWORD(mulai)
+    <statement-list>
+      <assignment-statement>
+        IDENTIFIER(pekan)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(8)
+      SEMICOLON(;)
+      <if-statement>
+        KEYWORD(jika)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                IDENTIFIER(pekan)
+          RELATIONAL_OPERATOR(=)
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(8)
+        KEYWORD(maka)
+        <procedure/function-call>
+          IDENTIFIER(writeln)
+          LPARENTHESIS(()
+          <parameter-list>
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    STRING_LITERAL('Semangat UTS')
+          RPARENTHESIS())
+        KEYWORD(selain_itu)
+        <procedure/function-call>
+          IDENTIFIER(writeln)
+          LPARENTHESIS(()
+          <parameter-list>
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    STRING_LITERAL('Nugas moal?')
+          RPARENTHESIS())
+      SEMICOLON(;)
+    KEYWORD(selesai)
+  DOT(.)
+
+--------------

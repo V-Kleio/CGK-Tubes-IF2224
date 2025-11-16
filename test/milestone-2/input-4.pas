@@ -8,6 +8,6 @@ mulai
 
     jika pekan = 8 maka
         writeln('Semangat UTS')
-    selain-itu
+    selain_itu
         writeln('Nugas moal?');
 selesai.

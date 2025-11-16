@@ -1,0 +1,75 @@
+---TOKENS---
+KEYWORD(program)
+IDENTIFIER(HitungMundur)
+SEMICOLON(;)
+KEYWORD(variabel)
+IDENTIFIER(i)
+COLON(:)
+KEYWORD(integer)
+SEMICOLON(;)
+KEYWORD(mulai)
+KEYWORD(untuk)
+IDENTIFIER(i)
+ASSIGN_OPERATOR(:=)
+NUMBER(3)
+KEYWORD(turun_ke)
+NUMBER(1)
+KEYWORD(lakukan)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+IDENTIFIER(i)
+RPARENTHESIS())
+SEMICOLON(;)
+KEYWORD(selesai)
+DOT(.)
+------------
+
+---PARSE TREE---
+<program>
+  <program-header>
+    KEYWORD(program)
+    IDENTIFIER(HitungMundur)
+    SEMICOLON(;)
+  <declaration-part>
+    <var-declaration>
+      KEYWORD(variabel)
+      <identifier-list>
+        IDENTIFIER(i)
+      COLON(:)
+      <type>
+        KEYWORD(integer)
+      SEMICOLON(;)
+  <compound-statement>
+    KEYWORD(mulai)
+    <statement-list>
+      <for-statement>
+        KEYWORD(untuk)
+        IDENTIFIER(i)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(3)
+        KEYWORD(turun_ke)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(1)
+        KEYWORD(lakukan)
+        <procedure/function-call>
+          IDENTIFIER(writeln)
+          LPARENTHESIS(()
+          <parameter-list>
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    IDENTIFIER(i)
+          RPARENTHESIS())
+      SEMICOLON(;)
+    KEYWORD(selesai)
+  DOT(.)
+
+--------------
