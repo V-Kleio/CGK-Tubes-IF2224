@@ -2,13 +2,18 @@ use std::env;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
-use crate::{dfa::Dfa, lexer::Lexer, parser::Parser};
+use crate::{dfa::Dfa, lexer::Lexer, parser::Parser, semantic_analyzer::SemanticAnalyzer};
 
+mod ast;
 mod dfa;
 mod lexer;
 mod node;
 mod parser;
+mod semantic_analyzer;
+mod semantic_error;
+mod symbol_table;
 mod token;
+mod types;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -80,7 +85,43 @@ fn main() {
             writeln!(writer, "{}", node).unwrap();
             writeln!(writer, "--------------").unwrap();
 
-            println!("\nSuccessfully parsed and wrote to {}", pathtooutput);
+            // Semantic Analysis
+            println!("\nPerforming semantic analysis...");
+            let mut analyzer = SemanticAnalyzer::new();
+            
+            match analyzer.analyze(&node) {
+                Ok(ast) => {
+                    println!("\n---SEMANTIC ANALYSIS---");
+                    println!("{}", analyzer.symbol_table);
+                    println!("\n---DECORATED AST---");
+                    println!("{}", ast);
+                    println!("--------------");
+
+                    writeln!(writer, "\n---SEMANTIC ANALYSIS---").unwrap();
+                    writeln!(writer, "{}", analyzer.symbol_table).unwrap();
+                    writeln!(writer, "\n---DECORATED AST---").unwrap();
+                    writeln!(writer, "{}", ast).unwrap();
+                    writeln!(writer, "--------------").unwrap();
+
+                    println!("\nSuccessfully analyzed and wrote to {}", pathtooutput);
+                }
+                Err(errors) => {
+                    eprintln!("\n---SEMANTIC ERRORS---");
+                    for error in &errors {
+                        eprintln!("{}", error);
+                    }
+                    eprintln!("------------------");
+
+                    writeln!(writer, "\n---SEMANTIC ERRORS---").unwrap();
+                    for error in &errors {
+                        writeln!(writer, "{}", error).unwrap();
+                    }
+                    writeln!(writer, "------------------").unwrap();
+
+                    println!("\nSemantic analysis completed with {} error(s). Output written to {}", 
+                             errors.len(), pathtooutput);
+                }
+            }
         }
         Err(e) => {
             eprintln!("\n---PARSER ERROR---");
