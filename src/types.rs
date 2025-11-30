@@ -137,18 +137,18 @@ impl DataType {
     
     /// Convert DataType to numeric code (for Pascal-S compatibility)
     /// Following standard Pascal-S type codes:
-    /// 0 = Integer, 1 = Real, 2 = Boolean, 3 = Char, 4 = String
-    /// 5+ = Array/Record (ref to atab/btab)
+    /// 0 = Void, 1 = Integer, 2 = Real, 3 = Boolean, 4 = String, 5 = Char
+    /// 6+ = Array/Record (ref to atab/btab)
     pub fn to_numeric(&self) -> String {
         match self {
-            DataType::Integer => "0".to_string(),
-            DataType::Real => "1".to_string(),
-            DataType::Boolean => "2".to_string(),
-            DataType::Char => "3".to_string(),
-            DataType::String => "4".to_string(),
-            DataType::Array(idx) => format!("{}", idx),
-            DataType::UserDefined(_) => "5".to_string(),
             DataType::Void => "0".to_string(),
+            DataType::Integer => "1".to_string(),
+            DataType::Real => "2".to_string(),
+            DataType::Boolean => "3".to_string(),
+            DataType::String => "4".to_string(),
+            DataType::Char => "5".to_string(),
+            DataType::Array(idx) => format!("{}", idx),
+            DataType::UserDefined(_) => "6".to_string(),
             DataType::Unknown => "-".to_string(),
         }
     }
