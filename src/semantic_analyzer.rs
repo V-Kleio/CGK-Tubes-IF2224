@@ -309,13 +309,13 @@ impl SemanticAnalyzer {
         // Enter new block
         let block_index = self.symbol_table.enter_block();
 
-        // Parse parameters if present
-        let params = if matches!(node.children[idx].node_type, NodeType::FormalParameterList) {
-            let p = self.visit_formal_parameter_list(&node.children[idx]);
+        // Check if parameters exist and save the node index
+        let param_node_idx = if idx < node.children.len() && matches!(node.children[idx].node_type, NodeType::FormalParameterList) {
+            let temp_idx = idx;
             idx += 1;
-            p
+            Some(temp_idx)
         } else {
-            Vec::new()
+            None
         };
 
         // Skip semicolon
@@ -333,7 +333,16 @@ impl SemanticAnalyzer {
             level: self.symbol_table.current_level(),
             address: 0,
         });
+        
+        // Re-enter block for procedure body
         self.symbol_table.enter_block();
+        
+        // process parameters
+        let params = if let Some(param_idx) = param_node_idx {
+            self.visit_formal_parameter_list(&node.children[param_idx])
+        } else {
+            Vec::new()
+        };
 
         // Process declarations
         let declarations = self.visit_declaration_part(&node.children[idx]);
@@ -372,16 +381,16 @@ impl SemanticAnalyzer {
             self.errors.push(SemanticError::redeclared(name.clone(), None));
         }
 
-        // Enter new block
+        // Enter new block for function
         let block_index = self.symbol_table.enter_block();
 
-        // Parse parameters if present
-        let params = if matches!(node.children[idx].node_type, NodeType::FormalParameterList) {
-            let p = self.visit_formal_parameter_list(&node.children[idx]);
+        // Check if parameters exist and save the node index
+        let param_node_idx = if idx < node.children.len() && matches!(node.children[idx].node_type, NodeType::FormalParameterList) {
+            let temp_idx = idx;
             idx += 1;
-            p
+            Some(temp_idx)
         } else {
-            Vec::new()
+            None
         };
 
         // Skip colon
@@ -407,6 +416,13 @@ impl SemanticAnalyzer {
             address: 0,
         });
         self.symbol_table.enter_block();
+
+        // process parameters
+        let params = if let Some(param_idx) = param_node_idx {
+            self.visit_formal_parameter_list(&node.children[param_idx])
+        } else {
+            Vec::new()
+        };
 
         self.current_proc = Some(name.clone());
 
@@ -438,8 +454,14 @@ impl SemanticAnalyzer {
         let mut params = Vec::new();
         let mut i = 1; // Skip '('
 
-        while i < node.children.len() - 1 {
-            // Skip ')'
+        while i < node.children.len() - 1 { // Skip ')'
+            // Skip optional 'variabel' keyword
+            if let NodeType::Terminal(token) = &node.children[i].node_type {
+                if token.value == "variabel" {
+                    i += 1; // Skip the 'variabel' keyword
+                }
+            }
+            
             // Get identifier list
             let id_list = self.get_identifier_list(&node.children[i]);
             i += 1;
@@ -1103,14 +1125,39 @@ impl SemanticAnalyzer {
         (low, high)
     }
 
-    /// Get integer value from literal node
+    /// Get integer value from literal node or unary expression
     fn get_literal_int(&self, node: &AstNode) -> Option<i32> {
-        if let AstNode::Literal { value, .. } = node {
-            if let LiteralValue::Integer(v) = value {
-                return Some(*v as i32);
+        match node {
+            AstNode::Literal { value, .. } => {
+                if let LiteralValue::Integer(v) = value {
+                    return Some(*v as i32);
+                }
+                None
             }
+            AstNode::UnaryOp { op, operand, .. } => {
+                // Handle unary + and -
+                if let Some(val) = self.get_literal_int(operand) {
+                    match op.as_str() {
+                        "-" => Some(-val),
+                        "+" => Some(val),
+                        _ => None,
+                    }
+                } else {
+                    None
+                }
+            }
+            AstNode::Var { tab_index, .. } => {
+                // Handle constant references
+                let entry = &self.symbol_table.tab[*tab_index];
+                if entry.obj == ObjectKind::Constant {
+                    // TODO: Store constant values in symbol table
+                    None
+                } else {
+                    None
+                }
+            }
+            _ => None,
         }
-        None
     }
 
     /// Get identifier list from parse tree
