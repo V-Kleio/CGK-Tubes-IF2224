@@ -62,6 +62,8 @@ pub enum AstNode {
     // Statements
     Block {
         statements: Vec<AstNode>,
+        block_index: usize,
+        level: usize,
     },
     
     Assign {
@@ -159,20 +161,23 @@ impl AstNode {
         
         match self {
             AstNode::Program { name, declarations, body, tab_index } => {
-                writeln!(f, "{}Program(name: '{}', tab_index: {:?})", ind, name, tab_index)?;
+                writeln!(f, "{}Program(name: '{}')", ind, name)?;
                 if !declarations.is_empty() {
-                    writeln!(f, "{}  Declarations:", ind)?;
+                    writeln!(f, "{}  Declarations", ind)?;
                     for decl in declarations {
                         decl.fmt_recursive(f, indent + 2)?;
                     }
                 }
-                writeln!(f, "{}  Body:", ind)?;
+                writeln!(f, "{}  Block", ind)?;
                 body.fmt_recursive(f, indent + 2)?;
             }
             
             AstNode::VarDecl { names, data_type, tab_indices, level } => {
-                writeln!(f, "{}VarDecl(names: {:?}, type: {}, indices: {:?}, level: {})", 
-                         ind, names, data_type, tab_indices, level)?;
+                // Display single variable per line
+                if let (Some(name), Some(tab_idx)) = (names.first(), tab_indices.first()) {
+                    writeln!(f, "{}VarDecl('{}') → tab_index:{}, type:{}, lev:{}", 
+                             ind, name, tab_idx, data_type, level)?;
+                }
             }
             
             AstNode::ConstDecl { name, value, data_type, tab_index } => {
@@ -230,19 +235,40 @@ impl AstNode {
                          ind, names, data_type, is_var, tab_indices)?;
             }
             
-            AstNode::Block { statements } => {
-                writeln!(f, "{}Block", ind)?;
+            AstNode::Block { statements, block_index, level } => {
+                writeln!(f, "{}Block → block_index:{}, lev:{}", ind, block_index, level)?;
                 for stmt in statements {
                     stmt.fmt_recursive(f, indent + 1)?;
                 }
             }
             
             AstNode::Assign { target, value, data_type } => {
-                writeln!(f, "{}Assign(type: {})", ind, data_type)?;
-                writeln!(f, "{}  Target:", ind)?;
-                target.fmt_recursive(f, indent + 2)?;
-                writeln!(f, "{}  Value:", ind)?;
-                value.fmt_recursive(f, indent + 2)?;
+                // Extract target and value for inline display
+                let target_str = match target.as_ref() {
+                    AstNode::Var { name, .. } => name.clone(),
+                    _ => "?".to_string(),
+                };
+                let value_str = match value.as_ref() {
+                    AstNode::Literal { value: LiteralValue::Integer(v), .. } => format!("{}", v),
+                    AstNode::BinOp { op, left, right, .. } => {
+                        let left_str = match left.as_ref() {
+                            AstNode::Var { name, .. } => name.clone(),
+                            AstNode::Literal { value: LiteralValue::Integer(v), .. } => format!("{}", v),
+                            _ => "?".to_string(),
+                        };
+                        let right_str = match right.as_ref() {
+                            AstNode::Var { name, .. } => name.clone(),
+                            AstNode::Literal { value: LiteralValue::Integer(v), .. } => format!("{}", v),
+                            _ => "?".to_string(),
+                        };
+                        format!("{}{}{}", left_str, op, right_str)
+                    },
+                    _ => "...".to_string(),
+                };
+                writeln!(f, "{}Assign('{}' := {}) → type:{}", ind, target_str, value_str, data_type)?;
+                // Show children directly without labels
+                target.fmt_recursive(f, indent + 1)?;
+                value.fmt_recursive(f, indent + 1)?;
             }
             
             AstNode::If { condition, then_stmt, else_stmt } => {
@@ -277,13 +303,13 @@ impl AstNode {
             }
             
             AstNode::ProcCall { name, args, tab_index } => {
-                writeln!(f, "{}ProcCall(name: '{}', tab_index: {})", ind, name, tab_index)?;
-                if !args.is_empty() {
-                    writeln!(f, "{}  Arguments:", ind)?;
-                    for arg in args {
-                        arg.fmt_recursive(f, indent + 2)?;
-                    }
-                }
+                // Predefined procedures are at indices 29-32
+                let predefined_marker = if *tab_index >= 29 && *tab_index <= 32 {
+                    " → predefined"
+                } else {
+                    ""
+                };
+                writeln!(f, "{}{}(...){}, tab_index:{}", ind, name, predefined_marker, tab_index)?;
             }
             
             AstNode::BinOp { op, left, right, data_type } => {
