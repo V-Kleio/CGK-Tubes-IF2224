@@ -1,0 +1,211 @@
+---TOKENS---
+KEYWORD(program)
+IDENTIFIER(NestedTest)
+SEMICOLON(;)
+KEYWORD(variabel)
+IDENTIFIER(x)
+COLON(:)
+KEYWORD(integer)
+SEMICOLON(;)
+KEYWORD(prosedur)
+IDENTIFIER(Outer)
+SEMICOLON(;)
+KEYWORD(prosedur)
+IDENTIFIER(Inner)
+SEMICOLON(;)
+KEYWORD(mulai)
+IDENTIFIER(x)
+ASSIGN_OPERATOR(:=)
+NUMBER(10)
+SEMICOLON(;)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+IDENTIFIER(x)
+RPARENTHESIS())
+KEYWORD(selesai)
+SEMICOLON(;)
+KEYWORD(mulai)
+IDENTIFIER(Inner)
+SEMICOLON(;)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+STRING_LITERAL('Done')
+RPARENTHESIS())
+KEYWORD(selesai)
+SEMICOLON(;)
+KEYWORD(mulai)
+IDENTIFIER(x)
+ASSIGN_OPERATOR(:=)
+NUMBER(0)
+SEMICOLON(;)
+IDENTIFIER(Outer)
+KEYWORD(selesai)
+DOT(.)
+------------
+
+---PARSE TREE---
+<program>
+  <program-header>
+    KEYWORD(program)
+    IDENTIFIER(NestedTest)
+    SEMICOLON(;)
+  <declaration-part>
+    <var-declaration>
+      KEYWORD(variabel)
+      <identifier-list>
+        IDENTIFIER(x)
+      COLON(:)
+      <type>
+        KEYWORD(integer)
+      SEMICOLON(;)
+    <subprogram-declaration>
+      <procedure-declaration>
+        KEYWORD(prosedur)
+        IDENTIFIER(Outer)
+        SEMICOLON(;)
+        <declaration-part>
+          <subprogram-declaration>
+            <procedure-declaration>
+              KEYWORD(prosedur)
+              IDENTIFIER(Inner)
+              SEMICOLON(;)
+              <declaration-part>
+              <compound-statement>
+                KEYWORD(mulai)
+                <statement-list>
+                  <assignment-statement>
+                    IDENTIFIER(x)
+                    ASSIGN_OPERATOR(:=)
+                    <expression>
+                      <simple-expression>
+                        <term>
+                          <factor>
+                            NUMBER(10)
+                  SEMICOLON(;)
+                  <procedure/function-call>
+                    IDENTIFIER(writeln)
+                    LPARENTHESIS(()
+                    <parameter-list>
+                      <expression>
+                        <simple-expression>
+                          <term>
+                            <factor>
+                              IDENTIFIER(x)
+                    RPARENTHESIS())
+                KEYWORD(selesai)
+              SEMICOLON(;)
+        <compound-statement>
+          KEYWORD(mulai)
+          <statement-list>
+            <procedure/function-call>
+              IDENTIFIER(Inner)
+            SEMICOLON(;)
+            <procedure/function-call>
+              IDENTIFIER(writeln)
+              LPARENTHESIS(()
+              <parameter-list>
+                <expression>
+                  <simple-expression>
+                    <term>
+                      <factor>
+                        STRING_LITERAL('Done')
+              RPARENTHESIS())
+          KEYWORD(selesai)
+        SEMICOLON(;)
+  <compound-statement>
+    KEYWORD(mulai)
+    <statement-list>
+      <assignment-statement>
+        IDENTIFIER(x)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(0)
+      SEMICOLON(;)
+      <procedure/function-call>
+        IDENTIFIER(Outer)
+    KEYWORD(selesai)
+  DOT(.)
+
+--------------
+
+---SEMANTIC ANALYSIS---
+Symbol Table (tab):
+idx  name            obj          type       ref   nrm  lev  adr   link 
+---------------------------------------------------------------------------
+0    dan             type         -          -     1    0    0     -    
+1    larik           type         -          -     1    0    1     -    
+2    mulai           type         -          -     1    0    2     -    
+3    kasus           type         -          -     1    0    3     -    
+4    konstanta       type         -          -     1    0    4     -    
+5    bagi            type         -          -     1    0    5     -    
+6    turun_ke        type         -          -     1    0    6     -    
+7    lakukan         type         -          -     1    0    7     -    
+8    selain_itu      type         -          -     1    0    8     -    
+9    selesai         type         -          -     1    0    9     -    
+10   untuk           type         -          -     1    0    10    -    
+11   fungsi          type         -          -     1    0    11    -    
+12   jika            type         -          -     1    0    12    -    
+13   mod             type         -          -     1    0    13    -    
+14   tidak           type         -          -     1    0    14    -    
+15   dari            type         -          -     1    0    15    -    
+16   atau            type         -          -     1    0    16    -    
+17   prosedur        type         -          -     1    0    17    -    
+18   program         type         -          -     1    0    18    -    
+19   rekaman         type         -          -     1    0    19    -    
+20   ulangi          type         -          -     1    0    20    -    
+21   string          type         4          -     1    0    21    -    
+22   maka            type         -          -     1    0    22    -    
+23   ke              type         -          -     1    0    23    -    
+24   tipe            type         -          -     1    0    24    -    
+25   sampai          type         -          -     1    0    25    -    
+26   variabel        type         -          -     1    0    26    -    
+27   selama          type         -          -     1    0    27    -    
+28   padat           type         -          -     1    0    28    -    
+29   writeln         procedure    0          -     1    0    29    -    
+30   write           procedure    0          -     1    0    30    -    
+31   readln          procedure    0          -     1    0    31    -    
+32   read            procedure    0          -     1    0    32    -    
+33   NestedTest      program      0          -     1    0    0     -    
+34   x               variable     1          -     1    0    0     -    
+35   Outer           procedure    0          1     1    0    0     -    
+36   Inner           procedure    0          3     1    1    0     -    
+
+Block Table (btab):
+idx  last   lpar   psze   vsze  
+------------------------------
+0    35     0      0      1     
+1    0      0      0      0     
+2    36     0      0      0     
+3    0      0      0      0     
+4    0      0      0      0     
+5    0      0      0      0     
+
+
+---DECORATED AST---
+Program(name: 'NestedTest')
+  Declarations
+    VarDecl('x') → tab_index:34, type:integer, lev:0
+    ProcDecl(name: 'Outer', tab_index: 35, block_index: 1)
+      Declarations:
+        ProcDecl(name: 'Inner', tab_index: 36, block_index: 3)
+          Body:
+            Block → block_index:4, lev:2
+              Assign('x' := 10) → type:integer
+                Var(name: 'x', type: integer, tab_index: 34, level: 0)
+                Literal(value: 10, type: integer)
+              writeln(...) → predefined, tab_index:29
+      Body:
+        Block → block_index:2, lev:1
+          Inner(...), tab_index:36
+          writeln(...) → predefined, tab_index:29
+  Block
+    Block → block_index:5, lev:1
+      Assign('x' := 0) → type:integer
+        Var(name: 'x', type: integer, tab_index: 34, level: 0)
+        Literal(value: 0, type: integer)
+      Outer(...), tab_index:35
+
+--------------
