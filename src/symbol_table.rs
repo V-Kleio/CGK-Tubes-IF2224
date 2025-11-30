@@ -1,7 +1,7 @@
 use crate::types::{DataType, ObjectKind};
 use std::fmt;
 
-// This uses Forward chaining: link points to NEXT identifier in block
+// This uses Backward chaining
 
 /// Entry in the identifier table (tab)
 #[derive(Debug, Clone)]
@@ -403,8 +403,60 @@ impl SymbolTable {
         });
         
         // ============================================================
-        // USER IDENTIFIERS START FROM INDEX 29
-        // Built-in types, constants, and procedures added dynamically
+        // PREDEFINED PROCEDURES (indices 29-32)
+        // These are always available and cannot be redeclared
+        // ============================================================
+        
+        // 29: writeln
+        tab.push(TabEntry {
+            name: "writeln".to_string(),
+            link: None,
+            obj: ObjectKind::Procedure,
+            data_type: DataType::Void,
+            ref_index: None,
+            normal: true,
+            level: 0,
+            address: 29,
+        });
+        
+        // 30: write
+        tab.push(TabEntry {
+            name: "write".to_string(),
+            link: None,
+            obj: ObjectKind::Procedure,
+            data_type: DataType::Void,
+            ref_index: None,
+            normal: true,
+            level: 0,
+            address: 30,
+        });
+        
+        // 31: readln
+        tab.push(TabEntry {
+            name: "readln".to_string(),
+            link: None,
+            obj: ObjectKind::Procedure,
+            data_type: DataType::Void,
+            ref_index: None,
+            normal: true,
+            level: 0,
+            address: 31,
+        });
+        
+        // 32: read
+        tab.push(TabEntry {
+            name: "read".to_string(),
+            link: None,
+            obj: ObjectKind::Procedure,
+            data_type: DataType::Void,
+            ref_index: None,
+            normal: true,
+            level: 0,
+            address: 32,
+        });
+        
+        // ============================================================
+        // USER IDENTIFIERS START FROM INDEX 33
         // ============================================================
         
         // Initialize btab with global block (index 0)
@@ -458,26 +510,25 @@ impl SymbolTable {
         let block_index = self.display[level];
         
         let mut entry = entry;
-        entry.link = None;  // New entry has no next (yet)
         
-        // If this is the first identifier in block, update btab.last to point to it
-        if self.btab[block_index].last == 0 {
-            self.btab[block_index].last = index;
-        } else {
-            // Find last identifier in chain and link to this
-            let first = self.btab[block_index].last;
-            let mut current = first;
-            
-            // Traverse to find last entry in chain
-            while let Some(next) = self.tab[current].link {
-                current = next;
+        // Find previous identifier of same object type in current block for linking
+        let mut prev_same_type: Option<usize> = None;
+        let mut current = self.btab[block_index].last;
+        
+        while current > 0 {
+            if self.tab[current].obj == entry.obj {
+                prev_same_type = Some(current);
+                break;
             }
-            
-            // Link previous last entry to this
-            self.tab[current].link = Some(index);
+            current = self.tab[current].link.unwrap_or(0);
         }
         
+        entry.link = prev_same_type;  // Link to previous entry of same type (or None)
+        
         self.tab.push(entry);
+        
+        // Update btab.last to point to the most recently inserted identifier
+        self.btab[block_index].last = index;
         
         index
     }
@@ -487,9 +538,9 @@ impl SymbolTable {
         // Search from current level down to global level
         for level in (0..=self.current_level()).rev() {
             let block_index = self.display[level];
-            let mut current = self.btab[block_index].last;  // Points to first identifier
+            let mut current = self.btab[block_index].last;  // Points to last (most recent) identifier
             
-            // Follow the forward linked list in this block
+            // Follow the backward linked list in this block
             while current > 0 {
                 if self.tab[current].name == name {
                     return Some(current);
@@ -498,14 +549,44 @@ impl SymbolTable {
             }
         }
         
-        // Check reserved words (indices 0-28)
-        for i in 0..29 {
+        // Check reserved words and predefined procedures (indices 0-32)
+        for i in 0..33 {
             if self.tab[i].name == name {
                 return Some(i);
             }
         }
         
+        // Check for dynamically inserted identifiers after index 32
+        for i in 33..self.tab.len() {
+            if self.tab[i].name == name && self.tab[i].level == 0 {
+                return Some(i);
+            }
+        }
+        
         None
+    }
+    
+    /// Insert new identifier at global level after user declarations have completed
+    pub fn insert_at_global(&mut self, mut entry: TabEntry) -> usize {
+        let index = self.tab.len();
+        let block_index = 0;  // Always use global block
+        
+        let mut prev_same_type: Option<usize> = None;
+        let mut current = self.btab[block_index].last;
+        
+        while current > 0 {
+            if self.tab[current].obj == entry.obj {
+                prev_same_type = Some(current);
+                break;
+            }
+            current = self.tab[current].link.unwrap_or(0);
+        }
+        
+        entry.link = prev_same_type;  // Previous entry of same type (or None)
+        entry.level = 0;  // Force global level
+        
+        self.tab.push(entry);
+        index
     }
     
     /// Check if an identifier is a built-in procedure or constant
@@ -518,7 +599,7 @@ impl SymbolTable {
     pub fn lookup_current_scope(&self, name: &str) -> Option<usize> {
         let level = self.current_level();
         let block_index = self.display[level];
-        let mut current = self.btab[block_index].last;  // Points to first identifier
+        let mut current = self.btab[block_index].last;  // Points to most recent identifier
         
         while current > 0 {
             if self.tab[current].name == name {
