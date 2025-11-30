@@ -1,0 +1,671 @@
+---TOKENS---
+KEYWORD(program)
+IDENTIFIER(test0)
+SEMICOLON(;)
+KEYWORD(konstanta)
+IDENTIFIER(ten)
+RELATIONAL_OPERATOR(=)
+NUMBER(10)
+SEMICOLON(;)
+IDENTIFIER(plus)
+RELATIONAL_OPERATOR(=)
+CHAR_LITERAL('+')
+SEMICOLON(;)
+KEYWORD(tipe)
+IDENTIFIER(row)
+RELATIONAL_OPERATOR(=)
+KEYWORD(larik)
+LBRACKET([)
+NUMBER(1)
+RANGE_OPERATOR(..)
+IDENTIFIER(ten)
+RBRACKET(])
+KEYWORD(dari)
+KEYWORD(real)
+SEMICOLON(;)
+IDENTIFIER(complex)
+RELATIONAL_OPERATOR(=)
+KEYWORD(rekaman)
+IDENTIFIER(re)
+COMMA(,)
+IDENTIFIER(im)
+COLON(:)
+KEYWORD(real)
+KEYWORD(selesai)
+SEMICOLON(;)
+KEYWORD(variabel)
+IDENTIFIER(i)
+COMMA(,)
+IDENTIFIER(j)
+COLON(:)
+KEYWORD(integer)
+SEMICOLON(;)
+IDENTIFIER(p)
+COLON(:)
+KEYWORD(boolean)
+SEMICOLON(;)
+IDENTIFIER(z)
+COLON(:)
+IDENTIFIER(complex)
+SEMICOLON(;)
+IDENTIFIER(matrix)
+COLON(:)
+KEYWORD(larik)
+LBRACKET([)
+ARITHMETIC_OPERATOR(-)
+NUMBER(3)
+RANGE_OPERATOR(..)
+ARITHMETIC_OPERATOR(+)
+NUMBER(3)
+RBRACKET(])
+KEYWORD(dari)
+IDENTIFIER(row)
+SEMICOLON(;)
+IDENTIFIER(pattern)
+COLON(:)
+KEYWORD(larik)
+LBRACKET([)
+NUMBER(1)
+RANGE_OPERATOR(..)
+NUMBER(5)
+COMMA(,)
+NUMBER(1)
+RANGE_OPERATOR(..)
+NUMBER(5)
+RBRACKET(])
+KEYWORD(dari)
+KEYWORD(char)
+SEMICOLON(;)
+KEYWORD(prosedur)
+IDENTIFIER(dummy)
+LPARENTHESIS(()
+KEYWORD(variabel)
+IDENTIFIER(i)
+COLON(:)
+KEYWORD(integer)
+SEMICOLON(;)
+KEYWORD(variabel)
+IDENTIFIER(z)
+COLON(:)
+IDENTIFIER(complex)
+RPARENTHESIS())
+SEMICOLON(;)
+KEYWORD(variabel)
+IDENTIFIER(u)
+COMMA(,)
+IDENTIFIER(v)
+COLON(:)
+IDENTIFIER(row)
+SEMICOLON(;)
+IDENTIFIER(h1)
+COMMA(,)
+IDENTIFIER(h2)
+COLON(:)
+KEYWORD(rekaman)
+IDENTIFIER(c)
+COLON(:)
+IDENTIFIER(complex)
+SEMICOLON(;)
+IDENTIFIER(r)
+COLON(:)
+IDENTIFIER(row)
+KEYWORD(selesai)
+SEMICOLON(;)
+KEYWORD(mulai)
+IDENTIFIER(p)
+ASSIGN_OPERATOR(:=)
+IDENTIFIER(null)
+LPARENTHESIS(()
+IDENTIFIER(h1)
+DOT(.)
+IDENTIFIER(c)
+DOT(.)
+IDENTIFIER(re)
+COMMA(,)
+IDENTIFIER(h2)
+DOT(.)
+IDENTIFIER(c)
+DOT(.)
+IDENTIFIER(im)
+COMMA(,)
+IDENTIFIER(z)
+RPARENTHESIS())
+KEYWORD(selesai)
+SEMICOLON(;)
+KEYWORD(fungsi)
+IDENTIFIER(null)
+LPARENTHESIS(()
+IDENTIFIER(x)
+COMMA(,)
+IDENTIFIER(y)
+COLON(:)
+KEYWORD(real)
+SEMICOLON(;)
+IDENTIFIER(z)
+COLON(:)
+IDENTIFIER(complex)
+RPARENTHESIS())
+COLON(:)
+KEYWORD(boolean)
+SEMICOLON(;)
+KEYWORD(variabel)
+IDENTIFIER(a)
+COLON(:)
+KEYWORD(larik)
+LBRACKET([)
+CHAR_LITERAL('a')
+RANGE_OPERATOR(..)
+CHAR_LITERAL('z')
+RBRACKET(])
+KEYWORD(dari)
+IDENTIFIER(complex)
+SEMICOLON(;)
+IDENTIFIER(u)
+COLON(:)
+KEYWORD(char)
+SEMICOLON(;)
+KEYWORD(mulai)
+KEYWORD(selama)
+IDENTIFIER(x)
+RELATIONAL_OPERATOR(<)
+IDENTIFIER(y)
+KEYWORD(lakukan)
+IDENTIFIER(x)
+ASSIGN_OPERATOR(:=)
+IDENTIFIER(x)
+ARITHMETIC_OPERATOR(+)
+NUMBER(1.0)
+SEMICOLON(;)
+IDENTIFIER(null)
+ASSIGN_OPERATOR(:=)
+IDENTIFIER(x)
+RELATIONAL_OPERATOR(=)
+IDENTIFIER(y)
+KEYWORD(selesai)
+SEMICOLON(;)
+KEYWORD(mulai)
+IDENTIFIER(i)
+ASSIGN_OPERATOR(:=)
+NUMBER(85)
+SEMICOLON(;)
+IDENTIFIER(j)
+ASSIGN_OPERATOR(:=)
+NUMBER(51)
+SEMICOLON(;)
+KEYWORD(ulangi)
+KEYWORD(jika)
+IDENTIFIER(i)
+RELATIONAL_OPERATOR(>)
+IDENTIFIER(j)
+KEYWORD(maka)
+IDENTIFIER(i)
+ASSIGN_OPERATOR(:=)
+IDENTIFIER(i)
+ARITHMETIC_OPERATOR(-)
+IDENTIFIER(j)
+KEYWORD(selain_itu)
+IDENTIFIER(j)
+ASSIGN_OPERATOR(:=)
+IDENTIFIER(j)
+ARITHMETIC_OPERATOR(-)
+IDENTIFIER(i)
+KEYWORD(sampai)
+IDENTIFIER(i)
+RELATIONAL_OPERATOR(=)
+IDENTIFIER(j)
+SEMICOLON(;)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+IDENTIFIER(i)
+RPARENTHESIS())
+KEYWORD(selesai)
+DOT(.)
+------------
+
+---PARSE TREE---
+<program>
+  <program-header>
+    KEYWORD(program)
+    IDENTIFIER(test0)
+    SEMICOLON(;)
+  <declaration-part>
+    <const-declaration>
+      KEYWORD(konstanta)
+      IDENTIFIER(ten)
+      RELATIONAL_OPERATOR(=)
+      <expression>
+        <simple-expression>
+          <term>
+            <factor>
+              NUMBER(10)
+      SEMICOLON(;)
+      IDENTIFIER(plus)
+      RELATIONAL_OPERATOR(=)
+      <expression>
+        <simple-expression>
+          <term>
+            <factor>
+              CHAR_LITERAL('+')
+      SEMICOLON(;)
+    <type-declaration>
+      KEYWORD(tipe)
+      IDENTIFIER(row)
+      RELATIONAL_OPERATOR(=)
+      <type>
+        <array-type>
+          KEYWORD(larik)
+          LBRACKET([)
+          <range>
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    NUMBER(1)
+            RANGE_OPERATOR(..)
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    IDENTIFIER(ten)
+          RBRACKET(])
+          KEYWORD(dari)
+          <type>
+            KEYWORD(real)
+      SEMICOLON(;)
+      IDENTIFIER(complex)
+      RELATIONAL_OPERATOR(=)
+      <type>
+        <record-type>
+          KEYWORD(rekaman)
+          <identifier-list>
+            IDENTIFIER(re)
+            COMMA(,)
+            IDENTIFIER(im)
+          COLON(:)
+          <type>
+            KEYWORD(real)
+          KEYWORD(selesai)
+      SEMICOLON(;)
+    <var-declaration>
+      KEYWORD(variabel)
+      <identifier-list>
+        IDENTIFIER(i)
+        COMMA(,)
+        IDENTIFIER(j)
+      COLON(:)
+      <type>
+        KEYWORD(integer)
+      SEMICOLON(;)
+      <identifier-list>
+        IDENTIFIER(p)
+      COLON(:)
+      <type>
+        KEYWORD(boolean)
+      SEMICOLON(;)
+      <identifier-list>
+        IDENTIFIER(z)
+      COLON(:)
+      <type>
+        IDENTIFIER(complex)
+      SEMICOLON(;)
+      <identifier-list>
+        IDENTIFIER(matrix)
+      COLON(:)
+      <type>
+        <array-type>
+          KEYWORD(larik)
+          LBRACKET([)
+          <range>
+            <expression>
+              <simple-expression>
+                ARITHMETIC_OPERATOR(-)
+                <term>
+                  <factor>
+                    NUMBER(3)
+            RANGE_OPERATOR(..)
+            <expression>
+              <simple-expression>
+                ARITHMETIC_OPERATOR(+)
+                <term>
+                  <factor>
+                    NUMBER(3)
+          RBRACKET(])
+          KEYWORD(dari)
+          <type>
+            IDENTIFIER(row)
+      SEMICOLON(;)
+      <identifier-list>
+        IDENTIFIER(pattern)
+      COLON(:)
+      <type>
+        <array-type>
+          KEYWORD(larik)
+          LBRACKET([)
+          <range>
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    NUMBER(1)
+            RANGE_OPERATOR(..)
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    NUMBER(5)
+          COMMA(,)
+          <range>
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    NUMBER(1)
+            RANGE_OPERATOR(..)
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    NUMBER(5)
+          RBRACKET(])
+          KEYWORD(dari)
+          <type>
+            KEYWORD(char)
+      SEMICOLON(;)
+    <subprogram-declaration>
+      <procedure-declaration>
+        KEYWORD(prosedur)
+        IDENTIFIER(dummy)
+        <formal-parameter-list>
+          LPARENTHESIS(()
+          KEYWORD(variabel)
+          <identifier-list>
+            IDENTIFIER(i)
+          COLON(:)
+          <type>
+            KEYWORD(integer)
+          SEMICOLON(;)
+          KEYWORD(variabel)
+          <identifier-list>
+            IDENTIFIER(z)
+          COLON(:)
+          <type>
+            IDENTIFIER(complex)
+          RPARENTHESIS())
+        SEMICOLON(;)
+        <declaration-part>
+          <var-declaration>
+            KEYWORD(variabel)
+            <identifier-list>
+              IDENTIFIER(u)
+              COMMA(,)
+              IDENTIFIER(v)
+            COLON(:)
+            <type>
+              IDENTIFIER(row)
+            SEMICOLON(;)
+            <identifier-list>
+              IDENTIFIER(h1)
+              COMMA(,)
+              IDENTIFIER(h2)
+            COLON(:)
+            <type>
+              <record-type>
+                KEYWORD(rekaman)
+                <identifier-list>
+                  IDENTIFIER(c)
+                COLON(:)
+                <type>
+                  IDENTIFIER(complex)
+                SEMICOLON(;)
+                <identifier-list>
+                  IDENTIFIER(r)
+                COLON(:)
+                <type>
+                  IDENTIFIER(row)
+                KEYWORD(selesai)
+            SEMICOLON(;)
+        <compound-statement>
+          KEYWORD(mulai)
+          <statement-list>
+            <assignment-statement>
+              IDENTIFIER(p)
+              ASSIGN_OPERATOR(:=)
+              <expression>
+                <simple-expression>
+                  <term>
+                    <factor>
+                      <procedure/function-call>
+                        IDENTIFIER(null)
+                        LPARENTHESIS(()
+                        <parameter-list>
+                          <expression>
+                            <simple-expression>
+                              <term>
+                                <factor>
+                                  IDENTIFIER(h1)
+                                  DOT(.)
+                                  IDENTIFIER(c)
+                                  DOT(.)
+                                  IDENTIFIER(re)
+                          COMMA(,)
+                          <expression>
+                            <simple-expression>
+                              <term>
+                                <factor>
+                                  IDENTIFIER(h2)
+                                  DOT(.)
+                                  IDENTIFIER(c)
+                                  DOT(.)
+                                  IDENTIFIER(im)
+                          COMMA(,)
+                          <expression>
+                            <simple-expression>
+                              <term>
+                                <factor>
+                                  IDENTIFIER(z)
+                        RPARENTHESIS())
+          KEYWORD(selesai)
+        SEMICOLON(;)
+    <subprogram-declaration>
+      <function-declaration>
+        KEYWORD(fungsi)
+        IDENTIFIER(null)
+        <formal-parameter-list>
+          LPARENTHESIS(()
+          <identifier-list>
+            IDENTIFIER(x)
+            COMMA(,)
+            IDENTIFIER(y)
+          COLON(:)
+          <type>
+            KEYWORD(real)
+          SEMICOLON(;)
+          <identifier-list>
+            IDENTIFIER(z)
+          COLON(:)
+          <type>
+            IDENTIFIER(complex)
+          RPARENTHESIS())
+        COLON(:)
+        <type>
+          KEYWORD(boolean)
+        SEMICOLON(;)
+        <declaration-part>
+          <var-declaration>
+            KEYWORD(variabel)
+            <identifier-list>
+              IDENTIFIER(a)
+            COLON(:)
+            <type>
+              <array-type>
+                KEYWORD(larik)
+                LBRACKET([)
+                <range>
+                  <expression>
+                    <simple-expression>
+                      <term>
+                        <factor>
+                          CHAR_LITERAL('a')
+                  RANGE_OPERATOR(..)
+                  <expression>
+                    <simple-expression>
+                      <term>
+                        <factor>
+                          CHAR_LITERAL('z')
+                RBRACKET(])
+                KEYWORD(dari)
+                <type>
+                  IDENTIFIER(complex)
+            SEMICOLON(;)
+            <identifier-list>
+              IDENTIFIER(u)
+            COLON(:)
+            <type>
+              KEYWORD(char)
+            SEMICOLON(;)
+        <compound-statement>
+          KEYWORD(mulai)
+          <statement-list>
+            <while-statement>
+              KEYWORD(selama)
+              <expression>
+                <simple-expression>
+                  <term>
+                    <factor>
+                      IDENTIFIER(x)
+                RELATIONAL_OPERATOR(<)
+                <simple-expression>
+                  <term>
+                    <factor>
+                      IDENTIFIER(y)
+              KEYWORD(lakukan)
+              <assignment-statement>
+                IDENTIFIER(x)
+                ASSIGN_OPERATOR(:=)
+                <expression>
+                  <simple-expression>
+                    <term>
+                      <factor>
+                        IDENTIFIER(x)
+                    ARITHMETIC_OPERATOR(+)
+                    <term>
+                      <factor>
+                        NUMBER(1.0)
+            SEMICOLON(;)
+            <assignment-statement>
+              IDENTIFIER(null)
+              ASSIGN_OPERATOR(:=)
+              <expression>
+                <simple-expression>
+                  <term>
+                    <factor>
+                      IDENTIFIER(x)
+                RELATIONAL_OPERATOR(=)
+                <simple-expression>
+                  <term>
+                    <factor>
+                      IDENTIFIER(y)
+          KEYWORD(selesai)
+        SEMICOLON(;)
+  <compound-statement>
+    KEYWORD(mulai)
+    <statement-list>
+      <assignment-statement>
+        IDENTIFIER(i)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(85)
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(j)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(51)
+      SEMICOLON(;)
+      <repeat-statement>
+        KEYWORD(ulangi)
+        <if-statement>
+          KEYWORD(jika)
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  IDENTIFIER(i)
+            RELATIONAL_OPERATOR(>)
+            <simple-expression>
+              <term>
+                <factor>
+                  IDENTIFIER(j)
+          KEYWORD(maka)
+          <assignment-statement>
+            IDENTIFIER(i)
+            ASSIGN_OPERATOR(:=)
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    IDENTIFIER(i)
+                ARITHMETIC_OPERATOR(-)
+                <term>
+                  <factor>
+                    IDENTIFIER(j)
+          KEYWORD(selain_itu)
+          <assignment-statement>
+            IDENTIFIER(j)
+            ASSIGN_OPERATOR(:=)
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    IDENTIFIER(j)
+                ARITHMETIC_OPERATOR(-)
+                <term>
+                  <factor>
+                    IDENTIFIER(i)
+        KEYWORD(sampai)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                IDENTIFIER(i)
+          RELATIONAL_OPERATOR(=)
+          <simple-expression>
+            <term>
+              <factor>
+                IDENTIFIER(j)
+      SEMICOLON(;)
+      <procedure/function-call>
+        IDENTIFIER(writeln)
+        LPARENTHESIS(()
+        <parameter-list>
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  IDENTIFIER(i)
+        RPARENTHESIS())
+    KEYWORD(selesai)
+  DOT(.)
+
+--------------
+
+---SEMANTIC ERRORS---
+Semantic error: Invalid array bounds: lower bound must be less than or equal to upper bound
+Semantic error: Undeclared identifier 'null'
+Semantic error: Type mismatch: expected boolean, found unknown
+Semantic error: Undeclared identifier 'x'
+Semantic error: Undeclared identifier 'y'
+Semantic error: Invalid operation '<' for types unknown and unknown
+Semantic error: Condition must be of boolean type
+Semantic error: Undeclared identifier 'x'
+Semantic error: Undeclared identifier 'x'
+Semantic error: Undeclared identifier 'y'
+Semantic error: Invalid operation '=' for types unknown and unknown
+Semantic error: Type mismatch: expected boolean, found unknown
+------------------
