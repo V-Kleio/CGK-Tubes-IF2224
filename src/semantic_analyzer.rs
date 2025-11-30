@@ -53,8 +53,14 @@ impl SemanticAnalyzer {
             // Process declarations
             let declarations = self.visit_declaration_part(&node.children[1]);
 
+            // Enter new block for main compound statement (btab[1])
+            let main_block_index = self.symbol_table.enter_block();
+
             // Process main compound statement
             let body = self.visit_compound_statement(&node.children[2]);
+
+            // Exit main block
+            self.symbol_table.exit_block();
 
             return AstNode::Program {
                 name: program_name,
@@ -123,8 +129,7 @@ impl SemanticAnalyzer {
             // Skip semicolon
             i += 1;
 
-            // Insert variables into symbol table
-            let mut tab_indices = Vec::new();
+            // Insert variables into symbol table and create separate VarDecl for each
             let level = self.symbol_table.current_level();
 
             for name in &id_list {
@@ -145,21 +150,20 @@ impl SemanticAnalyzer {
                     ref_index: None,
                     normal: true,
                     level,
-                    address: self.symbol_table.btab[self.symbol_table.current_block()].var_size,
+                    address: 0,  // TODO: change
                 });
 
-                tab_indices.push(tab_index);
+                // Create individual VarDecl for each variable
+                declarations.push(AstNode::VarDecl {
+                    names: vec![name.clone()],
+                    data_type: data_type.clone(),
+                    tab_indices: vec![tab_index],
+                    level,
+                });
 
                 // Update variable size
                 self.symbol_table.add_var_size(1);
             }
-
-            declarations.push(AstNode::VarDecl {
-                names: id_list,
-                data_type,
-                tab_indices,
-                level,
-            });
         }
 
         declarations
@@ -486,7 +490,13 @@ impl SemanticAnalyzer {
         // mulai statement-list selesai
         if node.children.len() >= 2 {
             let statements = self.visit_statement_list(&node.children[1]);
-            return AstNode::Block { statements };
+            let block_index = self.symbol_table.current_block();
+            let level = self.symbol_table.current_level();
+            return AstNode::Block { 
+                statements, 
+                block_index,
+                level,
+            };
         }
         AstNode::Empty
     }
@@ -681,12 +691,7 @@ impl SemanticAnalyzer {
             return AstNode::Empty;
         };
 
-        // Check if it's a built-in procedure and insert if missing
-        if self.symbol_table.is_builtin(&name) && self.symbol_table.lookup(&name).is_none() {
-            self.insert_builtin(&name);
-        }
-
-        // Lookup procedure/function
+        // Lookup procedure/function (predefined procedures in reserved words)
         let tab_index = match self.symbol_table.lookup(&name) {
             Some(idx) => idx,
             None => {
@@ -716,30 +721,6 @@ impl SemanticAnalyzer {
             args,
             tab_index,
         }
-    }
-
-    /// Helper to insert built-in procedures/constants
-    fn insert_builtin(&mut self, name: &str) {
-        let (obj, data_type, address) = match name {
-            "writeln" => (ObjectKind::Procedure, DataType::Void, 0),
-            "write" => (ObjectKind::Procedure, DataType::Void, 1),
-            "readln" => (ObjectKind::Procedure, DataType::Void, 2),
-            "read" => (ObjectKind::Procedure, DataType::Void, 3),
-            "true" => (ObjectKind::Constant, DataType::Boolean, 1),
-            "false" => (ObjectKind::Constant, DataType::Boolean, 0),
-            _ => return,
-        };
-
-        self.symbol_table.insert(TabEntry {
-            name: name.to_string(),
-            link: None,
-            obj,
-            data_type,
-            ref_index: None,
-            normal: true,
-            level: 0,
-            address,
-        });
     }
 
     /// Visit parameter list
