@@ -1,0 +1,453 @@
+---TOKENS---
+KEYWORD(program)
+IDENTIFIER(TestAllTokens)
+SEMICOLON(;)
+KEYWORD(variabel)
+IDENTIFIER(my_integer)
+COMMA(,)
+IDENTIFIER(another_var)
+COLON(:)
+KEYWORD(integer)
+SEMICOLON(;)
+IDENTIFIER(a_real_number)
+COLON(:)
+KEYWORD(real)
+SEMICOLON(;)
+IDENTIFIER(is_done)
+COLON(:)
+KEYWORD(boolean)
+SEMICOLON(;)
+IDENTIFIER(my_char)
+COLON(:)
+KEYWORD(char)
+SEMICOLON(;)
+KEYWORD(konstanta)
+IDENTIFIER(PI)
+RELATIONAL_OPERATOR(=)
+NUMBER(3.14159)
+SEMICOLON(;)
+KEYWORD(tipe)
+IDENTIFIER(Numbers)
+RELATIONAL_OPERATOR(=)
+KEYWORD(larik)
+LBRACKET([)
+NUMBER(1)
+RANGE_OPERATOR(..)
+NUMBER(10)
+RBRACKET(])
+KEYWORD(dari)
+KEYWORD(integer)
+SEMICOLON(;)
+KEYWORD(mulai)
+IDENTIFIER(my_integer)
+ASSIGN_OPERATOR(:=)
+NUMBER(100)
+SEMICOLON(;)
+IDENTIFIER(another_var)
+ASSIGN_OPERATOR(:=)
+IDENTIFIER(my_integer)
+ARITHMETIC_OPERATOR(+)
+NUMBER(20)
+SEMICOLON(;)
+IDENTIFIER(a_real_number)
+ASSIGN_OPERATOR(:=)
+IDENTIFIER(my_integer)
+ARITHMETIC_OPERATOR(/)
+NUMBER(3.0)
+SEMICOLON(;)
+KEYWORD(jika)
+LPARENTHESIS(()
+IDENTIFIER(my_integer)
+RELATIONAL_OPERATOR(>)
+NUMBER(50)
+RPARENTHESIS())
+LOGICAL_OPERATOR(dan)
+LPARENTHESIS(()
+IDENTIFIER(another_var)
+RELATIONAL_OPERATOR(<>)
+NUMBER(104)
+RPARENTHESIS())
+KEYWORD(maka)
+KEYWORD(mulai)
+IDENTIFIER(is_done)
+ASSIGN_OPERATOR(:=)
+KEYWORD(true)
+SEMICOLON(;)
+KEYWORD(selesai)
+KEYWORD(selain_itu)
+KEYWORD(mulai)
+IDENTIFIER(is_done)
+ASSIGN_OPERATOR(:=)
+KEYWORD(false)
+SEMICOLON(;)
+KEYWORD(selesai)
+SEMICOLON(;)
+IDENTIFIER(my_char)
+ASSIGN_OPERATOR(:=)
+CHAR_LITERAL('A')
+SEMICOLON(;)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+STRING_LITERAL('This is a test string literal.')
+RPARENTHESIS())
+SEMICOLON(;)
+KEYWORD(jika)
+IDENTIFIER(another_var)
+RELATIONAL_OPERATOR(<=)
+NUMBER(105)
+KEYWORD(maka)
+IDENTIFIER(writeln)
+LPARENTHESIS(()
+STRING_LITERAL('Less than or equal')
+RPARENTHESIS())
+SEMICOLON(;)
+KEYWORD(selesai)
+DOT(.)
+------------
+
+---PARSE TREE---
+<program>
+  <program-header>
+    KEYWORD(program)
+    IDENTIFIER(TestAllTokens)
+    SEMICOLON(;)
+  <declaration-part>
+    <var-declaration>
+      KEYWORD(variabel)
+      <identifier-list>
+        IDENTIFIER(my_integer)
+        COMMA(,)
+        IDENTIFIER(another_var)
+      COLON(:)
+      <type>
+        KEYWORD(integer)
+      SEMICOLON(;)
+      <identifier-list>
+        IDENTIFIER(a_real_number)
+      COLON(:)
+      <type>
+        KEYWORD(real)
+      SEMICOLON(;)
+      <identifier-list>
+        IDENTIFIER(is_done)
+      COLON(:)
+      <type>
+        KEYWORD(boolean)
+      SEMICOLON(;)
+      <identifier-list>
+        IDENTIFIER(my_char)
+      COLON(:)
+      <type>
+        KEYWORD(char)
+      SEMICOLON(;)
+    <const-declaration>
+      KEYWORD(konstanta)
+      IDENTIFIER(PI)
+      RELATIONAL_OPERATOR(=)
+      <expression>
+        <simple-expression>
+          <term>
+            <factor>
+              NUMBER(3.14159)
+      SEMICOLON(;)
+    <type-declaration>
+      KEYWORD(tipe)
+      IDENTIFIER(Numbers)
+      RELATIONAL_OPERATOR(=)
+      <type>
+        <array-type>
+          KEYWORD(larik)
+          LBRACKET([)
+          <range>
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    NUMBER(1)
+            RANGE_OPERATOR(..)
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    NUMBER(10)
+          RBRACKET(])
+          KEYWORD(dari)
+          <type>
+            KEYWORD(integer)
+      SEMICOLON(;)
+  <compound-statement>
+    KEYWORD(mulai)
+    <statement-list>
+      <assignment-statement>
+        IDENTIFIER(my_integer)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(100)
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(another_var)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                IDENTIFIER(my_integer)
+            ARITHMETIC_OPERATOR(+)
+            <term>
+              <factor>
+                NUMBER(20)
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(a_real_number)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                IDENTIFIER(my_integer)
+              ARITHMETIC_OPERATOR(/)
+              <factor>
+                NUMBER(3.0)
+      SEMICOLON(;)
+      <if-statement>
+        KEYWORD(jika)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                LPARENTHESIS(()
+                <expression>
+                  <simple-expression>
+                    <term>
+                      <factor>
+                        IDENTIFIER(my_integer)
+                  RELATIONAL_OPERATOR(>)
+                  <simple-expression>
+                    <term>
+                      <factor>
+                        NUMBER(50)
+                RPARENTHESIS())
+              LOGICAL_OPERATOR(dan)
+              <factor>
+                LPARENTHESIS(()
+                <expression>
+                  <simple-expression>
+                    <term>
+                      <factor>
+                        IDENTIFIER(another_var)
+                  RELATIONAL_OPERATOR(<>)
+                  <simple-expression>
+                    <term>
+                      <factor>
+                        NUMBER(104)
+                RPARENTHESIS())
+        KEYWORD(maka)
+        <compound-statement>
+          KEYWORD(mulai)
+          <statement-list>
+            <assignment-statement>
+              IDENTIFIER(is_done)
+              ASSIGN_OPERATOR(:=)
+              <expression>
+                <simple-expression>
+                  <term>
+                    <factor>
+                      KEYWORD(true)
+            SEMICOLON(;)
+          KEYWORD(selesai)
+        KEYWORD(selain_itu)
+        <compound-statement>
+          KEYWORD(mulai)
+          <statement-list>
+            <assignment-statement>
+              IDENTIFIER(is_done)
+              ASSIGN_OPERATOR(:=)
+              <expression>
+                <simple-expression>
+                  <term>
+                    <factor>
+                      KEYWORD(false)
+            SEMICOLON(;)
+          KEYWORD(selesai)
+      SEMICOLON(;)
+      <assignment-statement>
+        IDENTIFIER(my_char)
+        ASSIGN_OPERATOR(:=)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                CHAR_LITERAL('A')
+      SEMICOLON(;)
+      <procedure/function-call>
+        IDENTIFIER(writeln)
+        LPARENTHESIS(()
+        <parameter-list>
+          <expression>
+            <simple-expression>
+              <term>
+                <factor>
+                  STRING_LITERAL('This is a test string literal.')
+        RPARENTHESIS())
+      SEMICOLON(;)
+      <if-statement>
+        KEYWORD(jika)
+        <expression>
+          <simple-expression>
+            <term>
+              <factor>
+                IDENTIFIER(another_var)
+          RELATIONAL_OPERATOR(<=)
+          <simple-expression>
+            <term>
+              <factor>
+                NUMBER(105)
+        KEYWORD(maka)
+        <procedure/function-call>
+          IDENTIFIER(writeln)
+          LPARENTHESIS(()
+          <parameter-list>
+            <expression>
+              <simple-expression>
+                <term>
+                  <factor>
+                    STRING_LITERAL('Less than or equal')
+          RPARENTHESIS())
+      SEMICOLON(;)
+    KEYWORD(selesai)
+  DOT(.)
+
+--------------
+
+---SEMANTIC ANALYSIS---
+Symbol Table (tab):
+idx  name            obj          type       ref   nrm  lev  adr   link 
+---------------------------------------------------------------------------
+0    dan             type         -          -     1    0    0     -    
+1    larik           type         -          -     1    0    1     -    
+2    mulai           type         -          -     1    0    2     -    
+3    kasus           type         -          -     1    0    3     -    
+4    konstanta       type         -          -     1    0    4     -    
+5    bagi            type         -          -     1    0    5     -    
+6    turun_ke        type         -          -     1    0    6     -    
+7    lakukan         type         -          -     1    0    7     -    
+8    selain_itu      type         -          -     1    0    8     -    
+9    selesai         type         -          -     1    0    9     -    
+10   untuk           type         -          -     1    0    10    -    
+11   fungsi          type         -          -     1    0    11    -    
+12   jika            type         -          -     1    0    12    -    
+13   mod             type         -          -     1    0    13    -    
+14   tidak           type         -          -     1    0    14    -    
+15   dari            type         -          -     1    0    15    -    
+16   atau            type         -          -     1    0    16    -    
+17   prosedur        type         -          -     1    0    17    -    
+18   program         type         -          -     1    0    18    -    
+19   rekaman         type         -          -     1    0    19    -    
+20   ulangi          type         -          -     1    0    20    -    
+21   string          type         4          -     1    0    21    -    
+22   maka            type         -          -     1    0    22    -    
+23   ke              type         -          -     1    0    23    -    
+24   tipe            type         -          -     1    0    24    -    
+25   sampai          type         -          -     1    0    25    -    
+26   variabel        type         -          -     1    0    26    -    
+27   selama          type         -          -     1    0    27    -    
+28   padat           type         -          -     1    0    28    -    
+29   writeln         procedure    0          -     1    0    29    -    
+30   write           procedure    0          -     1    0    30    -    
+31   readln          procedure    0          -     1    0    31    -    
+32   read            procedure    0          -     1    0    32    -    
+33   TestAllTokens   program      0          -     1    0    0     -    
+34   my_integer      variable     1          -     1    0    0     -    
+35   another_var     variable     1          -     1    0    0     34   
+36   a_real_number   variable     2          -     1    0    0     35   
+37   is_done         variable     3          -     1    0    0     36   
+38   my_char         variable     5          -     1    0    0     37   
+39   PI              constant     2          -     1    0    0     -    
+40   Numbers         type         0          -     1    0    0     -    
+
+Block Table (btab):
+idx  last   lpar   psze   vsze  
+------------------------------
+0    40     0      0      5     
+1    0      0      0      0     
+
+Array Table (atab):
+idx  xtyp       etyp       eref  low    high   elsz   size  
+------------------------------------------------------------
+0    integer    integer    -     1      10     1      10    
+
+
+---DECORATED AST---
+Program(name: 'TestAllTokens')
+  Declarations
+    VarDecl('my_integer') → tab_index:34, type:integer, lev:0
+    VarDecl('another_var') → tab_index:35, type:integer, lev:0
+    VarDecl('a_real_number') → tab_index:36, type:real, lev:0
+    VarDecl('is_done') → tab_index:37, type:boolean, lev:0
+    VarDecl('my_char') → tab_index:38, type:char, lev:0
+    ConstDecl(name: 'PI', type: real, tab_index: 39)
+      Value:
+        Literal(value: 3.14159, type: real)
+    TypeDecl(name: 'Numbers', type: array[0], tab_index: 40)
+  Block
+    Block → block_index:1, lev:1
+      Assign('my_integer' := 100) → type:integer
+        Var(name: 'my_integer', type: integer, tab_index: 34, level: 0)
+        Literal(value: 100, type: integer)
+      Assign('another_var' := my_integer+20) → type:integer
+        Var(name: 'another_var', type: integer, tab_index: 35, level: 0)
+        BinOp(op: '+', type: integer)
+          Left:
+            Var(name: 'my_integer', type: integer, tab_index: 34, level: 0)
+          Right:
+            Literal(value: 20, type: integer)
+      Assign('a_real_number' := my_integer/?) → type:real
+        Var(name: 'a_real_number', type: real, tab_index: 36, level: 0)
+        BinOp(op: '/', type: real)
+          Left:
+            Var(name: 'my_integer', type: integer, tab_index: 34, level: 0)
+          Right:
+            Literal(value: 3, type: real)
+      If
+        Condition:
+          BinOp(op: 'dan', type: boolean)
+            Left:
+              BinOp(op: '>', type: boolean)
+                Left:
+                  Var(name: 'my_integer', type: integer, tab_index: 34, level: 0)
+                Right:
+                  Literal(value: 50, type: integer)
+            Right:
+              BinOp(op: '<>', type: boolean)
+                Left:
+                  Var(name: 'another_var', type: integer, tab_index: 35, level: 0)
+                Right:
+                  Literal(value: 104, type: integer)
+        Then:
+          Block → block_index:1, lev:1
+            Assign('is_done' := ...) → type:boolean
+              Var(name: 'is_done', type: boolean, tab_index: 37, level: 0)
+              Literal(value: true, type: boolean)
+        Else:
+          Block → block_index:1, lev:1
+            Assign('is_done' := ...) → type:boolean
+              Var(name: 'is_done', type: boolean, tab_index: 37, level: 0)
+              Literal(value: false, type: boolean)
+      Assign('my_char' := ...) → type:char
+        Var(name: 'my_char', type: char, tab_index: 38, level: 0)
+        Literal(value: ''', type: char)
+      writeln(...) → predefined, tab_index:29
+      If
+        Condition:
+          BinOp(op: '<=', type: boolean)
+            Left:
+              Var(name: 'another_var', type: integer, tab_index: 35, level: 0)
+            Right:
+              Literal(value: 105, type: integer)
+        Then:
+          writeln(...) → predefined, tab_index:29
+
+--------------
