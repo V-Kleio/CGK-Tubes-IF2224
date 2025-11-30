@@ -1,13 +1,13 @@
 use crate::token::Token;
 use std::fmt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ParseNode {
     pub node_type: NodeType,
     pub children: Vec<ParseNode>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum NodeType {
     // Non-Terminal Grammar Rules
     Program,
@@ -19,6 +19,7 @@ pub enum NodeType {
     IdentifierList,
     Type,
     ArrayType,
+    RecordType,
     Range,
     SubprogramDeclaration,
     ProcedureDeclaration,
@@ -30,6 +31,7 @@ pub enum NodeType {
     IfStatement,
     WhileStatement,
     ForStatement,
+    RepeatStatement,
     ProcedureOrFunctionCall,
     ParameterList,
     Expression,
@@ -70,6 +72,7 @@ impl fmt::Display for NodeType {
             NodeType::IdentifierList => write!(f, "<identifier-list>"),
             NodeType::Type => write!(f, "<type>"),
             NodeType::ArrayType => write!(f, "<array-type>"),
+            NodeType::RecordType => write!(f, "<record-type>"),
             NodeType::Range => write!(f, "<range>"),
             NodeType::SubprogramDeclaration => write!(f, "<subprogram-declaration>"),
             NodeType::ProcedureDeclaration => write!(f, "<procedure-declaration>"),
@@ -81,6 +84,7 @@ impl fmt::Display for NodeType {
             NodeType::IfStatement => write!(f, "<if-statement>"),
             NodeType::WhileStatement => write!(f, "<while-statement>"),
             NodeType::ForStatement => write!(f, "<for-statement>"),
+            NodeType::RepeatStatement => write!(f, "<repeat-statement>"),
             NodeType::ProcedureOrFunctionCall => write!(f, "<procedure/function-call>"),
             NodeType::ParameterList => write!(f, "<parameter-list>"),
             NodeType::Expression => write!(f, "<expression>"),
